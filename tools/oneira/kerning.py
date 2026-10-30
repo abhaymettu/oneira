@@ -44,7 +44,8 @@ RIGHT = {
     "dash": ["hyphen", "uni00AD", "endash", "emdash"],
 }
 
-# (left class, right class): kern at Regular
+# (left class, right class): kern at Regular, or (Thin, Black) where the
+# need grows faster than the weight, as with hooks that collide
 PAIRS = {
     ("T", "o"): -88, ("T", "n"): -66, ("T", "v"): -56, ("T", "A"): -66, ("T", "J"): -50,
     ("T", "stop"): -96, ("T", "dash"): -64, ("T", "O"): -12,
@@ -62,7 +63,7 @@ PAIRS = {
     ("F", "A"): -48, ("F", "stop"): -96, ("F", "o"): -26, ("F", "J"): -40,
     ("K", "O"): -30, ("K", "o"): -24, ("K", "dash"): -50, ("K", "v"): -30,
     ("T", "j"): -40, ("F", "j"): -34, ("P", "j"): -24, ("V", "j"): -30, ("Y", "j"): -40,
-    ("desc", "j"): 56, ("open", "j"): 80,
+    ("desc", "j"): (50, 150), ("open", "j"): (72, 196),  # collisions: (Thin, Black)
     ("r", "stop"): -76, ("r", "o"): -10, ("r", "dash"): -30,
     ("v", "stop"): -64, ("v", "o"): -14, ("v", "dash"): -14,
     ("f", "quote"): 40, ("f", "stop"): -30, ("f", "o"): -8,
@@ -96,4 +97,5 @@ def kerning(t):
     """Pair values for weight t (0 Thin, 1 Black). Heavier weights fill
     their counters, so the same shapes need a little more kern."""
     k = lerp(0.88, 1.14, t)
-    return {(f"public.kern1.{a}", f"public.kern2.{b}"): round(v * k) for (a, b), v in PAIRS.items()}
+    return {(f"public.kern1.{a}", f"public.kern2.{b}"): round(lerp(*v, t) if isinstance(v, tuple) else v * k)
+            for (a, b), v in PAIRS.items()}

@@ -76,7 +76,7 @@ def charset():
             ".,:;&hellip;!?&iexcl;&iquest; &lsquo;&rsquo;&ldquo;&rdquo;&laquo;&raquo; ()[]{} "
             "+&minus;&times;&divide;=&plusmn;&lt;&gt; &copy;&reg;&sect;&para;&deg;&micro;"]
     body = "".join(f'<div class=cs style="{v(500, 100)}">{r}</div>' for r in rows)
-    return 900, f"""<div class=head><span>Character set</span><span>Basic Latin and Latin-1, 218 glyphs</span></div>{body}"""
+    return 780, f"""<div class=head><span>Character set</span><span>Basic Latin and Latin-1, 218 glyphs</span></div>{body}"""
 
 
 PANELS = {"hero": hero, "axes": axes, "rule": rule, "text": text, "charset": charset}

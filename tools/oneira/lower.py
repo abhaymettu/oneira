@@ -228,7 +228,7 @@ def j(p):
     s, x = _j(p)
     x0, x1 = _j(P(p.t, 0))[0].xbounds()
     sb = sidebearing("S", p)
-    dx = sb - x + (x - x0) * 0.6
+    dx = sb - x + (x - x0) * lerp(0.25, 0.5, p.t)  # less hang at Black, where the hook is wide
     return s.moved(dx), x1 + dx + sb
 
 

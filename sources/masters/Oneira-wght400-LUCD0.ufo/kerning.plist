@@ -175,7 +175,7 @@
     <key>public.kern1.desc</key>
     <dict>
       <key>public.kern2.j</key>
-      <integer>55</integer>
+      <integer>88</integer>
     </dict>
     <key>public.kern1.f</key>
     <dict>
@@ -189,7 +189,7 @@
     <key>public.kern1.open</key>
     <dict>
       <key>public.kern2.j</key>
-      <integer>78</integer>
+      <integer>118</integer>
     </dict>
     <key>public.kern1.quote</key>
     <dict>
