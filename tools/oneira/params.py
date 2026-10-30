@@ -14,7 +14,7 @@ class P:
     """Everything a drawing needs for one master. t = weight 0..1 (Thin..Black),
     w = Lucidity 0..1 (dream..lucid)."""
 
-    def __init__(self, t, w):
+    def __init__(self, t, w, sharp=False):
         self.t, self.w = t, w
         self.stem = lerp(30, 176, t)
         self.rv = self.stem * 1.06  # round verticals read lighter, so draw them heavier
@@ -23,8 +23,13 @@ class P:
         self.join = self.stem * lerp(0.86, 0.6, t)  # curve meeting a stem
         self.fl = w * lerp(48, 64, t)  # wedge flare
         self.soft = lerp(5, 16, t)  # corner radius of every triangle
-        self.end_r = lerp(self.stem * 0.3, 0, w)  # stroke-end rounding in the dream state
+        # stroke-end rounding in the dream state; sharp leaves it out, for
+        # measuring spacing, so rounding an end never moves a glyph's advance
+        self.end_r = 0.0 if sharp else lerp(self.stem * 0.3, 0, w)
         self.bar_r = lerp(self.sh * 0.3, self.soft * 0.4, w)
+        # in the dream state a wedge hides inside its stroke end; its base
+        # corners round with the end so they never poke out of it
+        self.wedge_r = (self.soft + self.end_r, self.soft)
 
     def tip(self):
         return Tip(self.w, self.soft)
@@ -85,7 +90,7 @@ def build(name, t, w):
     if sides is None:
         return fn(p)
     shape = fn(p)
-    x0, x1 = fn(P(t, 0)).xbounds()
+    x0, x1 = fn(P(t, 0, sharp=True)).xbounds()
     l0, l1 = shape.xbounds()
     room = [0.0 if k in "SDW" else TIP_ROOM * max(0.0, grow) for k, grow in zip(sides, (x0 - l0, l1 - x1))]
     lsb = sidebearing(sides[0], p) * air + room[0]

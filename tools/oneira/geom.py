@@ -230,15 +230,19 @@ def _area(pts):
 
 # ---------- straight strokes ----------
 
-def diag(shape, x0, y0, x1, y1, stem, r=None):
+def diag(shape, x0, y0, x1, y1, stem, r=None, ends=None):
     """Straight stroke between two centre points with horizontal cuts, sized so
-    the perpendicular thickness equals stem. Returns the horizontal width."""
+    the perpendicular thickness equals stem. ends=(r0, r1) rounds the corners
+    at (x0, y0) and (x1, y1) separately. Returns the horizontal width."""
+    if ends is None and r is not None:
+        ends = (r, r)
     if y1 < y0:
         x0, y0, x1, y1 = x1, y1, x0, y0
+        ends = None if ends is None else ends[::-1]
     tw = stem * math.hypot(x1 - x0, y1 - y0) / abs(y1 - y0)
     h = tw / 2
     pts = [(x0 - h, y0), (x0 + h, y0), (x1 + h, y1), (x1 - h, y1)]
-    shape.poly(pts, None if r is None else [r] * 4)
+    shape.poly(pts, None if ends is None else [ends[0], ends[0], ends[1], ends[1]])
     return tw
 
 
@@ -274,10 +278,11 @@ def hwidth(x0, y0, x1, y1, stem):
     return stem * math.hypot(x1 - x0, y1 - y0) / abs(y1 - y0)
 
 
-def clipped(shape, end, toward, stem, a, u):
+def clipped(shape, end, toward, stem, a, u, r=0.0):
     """Stroke from `end` (horizontal cut) toward a point, stopped where it meets
     the line through `a` with direction `u`, so the join hides inside the
-    stroke it meets. Returns the horizontal width at the cut."""
+    stroke it meets. r rounds the corners of the free end. Returns the
+    horizontal width at the cut."""
     dx, dy = toward[0] - end[0], toward[1] - end[1]
     ln = math.hypot(dx, dy)
     d = (dx / ln, dy / ln)
@@ -289,16 +294,19 @@ def clipped(shape, end, toward, stem, a, u):
         l_ = ((a[0] - c[0]) * -u[1] - (a[1] - c[1]) * -u[0]) / det
         out.append((c, (c[0] + l_ * d[0], c[1] + l_ * d[1])))
     pts = [out[0][0], out[1][0], out[1][1], out[0][1]]
+    radii = [r, r, 0, 0]
     if _area(pts) < 0:
-        pts = pts[::-1]
-    shape.poly(pts)
+        pts, radii = pts[::-1], radii[::-1]
+    shape.poly(pts, radii)
     return tw
 
 
 def wedge(shape, cx, y, half, flare, soft, up=True, slope=0.0):
     """The one serif: an equilateral triangle whose base sits on y, reaching
     `flare` past the stroke on each side. slope (stroke dx per unit dy away
-    from the cut) keeps the apex on the stroke's centre line."""
+    from the cut) keeps the apex on the stroke's centre line. soft is the
+    corner radius, or (base corners, apex)."""
+    rb, ra = soft if isinstance(soft, tuple) else (soft, soft)
     b = half + flare
     h = b * SQRT3
     apex_dx = h * slope
@@ -306,7 +314,7 @@ def wedge(shape, cx, y, half, flare, soft, up=True, slope=0.0):
         pts = [(cx - b, y), (cx + b, y), (cx + apex_dx, y + h)]
     else:
         pts = [(cx + apex_dx, y - h), (cx + b, y), (cx - b, y)]
-    shape.poly(pts, [soft] * 3)
+    shape.poly(pts, [rb, rb, ra] if up else [ra, rb, rb])
 
 
 def tittle(shape, cx, cy, r, w, soft):

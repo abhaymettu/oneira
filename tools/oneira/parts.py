@@ -14,9 +14,9 @@ def stem(s, p, x, y0, y1, foot=True, head=True, top_tip=False):
     s.poly([(x, y0), (x + p.stem, y0), (x + p.stem, y1), (x, y1)], [rf, rf, rh, rh])
     cx = x + p.stem / 2
     if foot:
-        wedge(s, cx, y0, p.stem / 2, p.fl, p.soft, up=True)
+        wedge(s, cx, y0, p.stem / 2, p.fl, p.wedge_r, up=True)
     if head:
-        wedge(s, cx, y1, p.stem / 2, p.fl, p.soft, up=False)
+        wedge(s, cx, y1, p.stem / 2, p.fl, p.wedge_r, up=False)
     if top_tip:
         Tip(p.w, p.soft, scale=lerp(0.8, 0.5, p.t)).draw(s, (x + p.stem, y1), (x, y1), (0, -1))
 
@@ -98,13 +98,24 @@ def _toward_vertex(p, xe, ye, xv, y_tip):
     return yc, tw
 
 
-def pointed(s, p, xe_l, xe_r, ye, xv, y_tip, wedges=(True, True)):
+def pointed(s, p, xe_l, xe_r, ye, xv, y_tip, wedges=(True, True), free=None):
     """Two strokes from horizontal cuts at height ye (centres xe_l, xe_r) to a
-    sharp vertex at (xv, y_tip). Each stroke runs a hair past the centre line so
-    the halves overlap instead of sharing an edge. Returns the stroke widths."""
+    vertex at (xv, y_tip). Each stroke runs a hair past the centre line so the
+    halves overlap instead of sharing an edge. The vertex is a small flat with
+    soft corners, drawn as if the strokes met a little beyond y_tip, so it
+    still reaches y_tip. free says which cuts are free ends (rounded in the
+    dream state); it defaults to the ends that carry wedges. Returns the
+    stroke widths."""
+    free = wedges if free is None else free
+    sgn = 1 if y_tip > ye else -1
+    r_apex = lerp(p.soft * 2, p.soft, p.w)
+    # flat half width = r_apex * 0.8; the stroke edge runs dx/dy = lean
+    lean = abs(xv - xe_l) / abs(y_tip - ye)
+    depth = r_apex * 0.8 / max(lean, 0.05)
+    y_v = y_tip + sgn * depth  # where the strokes would meet
     tws = []
-    for xe, side, wg in ((xe_l, -1, wedges[0]), (xe_r, 1, wedges[1])):
-        yc, tw = _toward_vertex(p, xe, ye, xv, y_tip)
+    for xe, side, wg, fr in ((xe_l, -1, wedges[0], free[0]), (xe_r, 1, wedges[1], free[1])):
+        yc, tw = _toward_vertex(p, xe, ye, xv, y_v)
         dx = xv - xe
         t_in = (abs(dx) - tw / 2) / abs(dx)
         y_in = ye + t_in * (yc - ye)
@@ -112,14 +123,18 @@ def pointed(s, p, xe_l, xe_r, ye, xv, y_tip, wedges=(True, True)):
         slope = (yc - ye) / dx  # dy per dx along the centre line
         outer = (xe + side * tw / 2, ye)
         inner = (xe - side * tw / 2, ye)
-        pts = [outer, inner, (xv + over, y_in + over * slope), (xv, y_tip)]
+        k = (y_tip - ye) / (y_v - ye)
+        c_out = (outer[0] + (xv - outer[0]) * k, y_tip)
+        r_cut = p.end_r if fr else 0
+        pts = [outer, inner, (xv + over, y_in + over * slope), (xv + over, y_tip), c_out]
+        radii = [r_cut, r_cut, 0, 0, r_apex]
         if _area(pts) < 0:
-            pts = pts[::-1]
-        s.poly(pts)
+            pts, radii = pts[::-1], radii[::-1]
+        s.poly(pts, radii)
         if wg:
             up = y_tip > ye
             run = dx / abs(yc - ye)
-            wedge(s, xe, ye, tw / 2, p.fl, p.soft, up=up, slope=run)
+            wedge(s, xe, ye, tw / 2, p.fl, p.wedge_r, up=up, slope=run)
         tws.append(tw)
     return tws
 

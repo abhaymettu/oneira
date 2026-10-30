@@ -195,8 +195,8 @@ def R(p):
     foot = bx + rx + p.W(20, 40)
     top = (bx - rx * 0.05, yb + p.sh / 2)
     tw = hwidth(top[0], top[1], foot, 0, p.dstem)
-    diag(s, top[0], top[1], foot - tw / 2, 0, p.dstem)
-    wedge(s, foot - tw / 2, 0, tw / 2, p.fl, p.soft, slope=(top[0] - foot + tw / 2) / top[1])
+    diag(s, top[0], top[1], foot - tw / 2, 0, p.dstem, ends=(0, p.end_r))
+    wedge(s, foot - tw / 2, 0, tw / 2, p.fl, p.wedge_r, slope=(top[0] - foot + tw / 2) / top[1])
     return s
 
 
@@ -272,8 +272,8 @@ def W_(p):
     tw0 = p.dstem * 1.25
     for _ in range(4):
         tw0 = pointed(Shape(), p, tw0 / 2, 2 * q - tw0 * 0.2, CAP, q, -OV, (False, False))[0]
-    pointed(s, p, tw0 / 2, 2 * q, CAP, q + tw0 * 0.1, -OV, (True, False))
-    pointed(s, p, 2 * q, W - tw0 / 2, CAP, 3 * q - tw0 * 0.1, -OV, (False, True))
+    pointed(s, p, tw0 / 2, 2 * q, CAP, q + tw0 * 0.1, -OV, (True, False), free=(True, True))
+    pointed(s, p, 2 * q, W - tw0 / 2, CAP, 3 * q - tw0 * 0.1, -OV, (False, True), free=(True, True))
     return s
 
 
@@ -313,12 +313,12 @@ def X(p):
     tw = p.dstem * 1.3
     for _ in range(4):
         tw = hwidth(tw / 2, 0, W - tw / 2, CAP, p.dstem)
-    diag(s, tw / 2, 0, W - tw / 2, CAP, p.dstem)
-    diag(s, W - tw / 2, 0, tw / 2, CAP, p.dstem)
+    diag(s, tw / 2, 0, W - tw / 2, CAP, p.dstem, r=p.end_r)
+    diag(s, W - tw / 2, 0, tw / 2, CAP, p.dstem, r=p.end_r)
     run = (W - tw) / CAP
     for x, y, up, sl in ((tw / 2, 0, True, run), (W - tw / 2, 0, True, -run),
                          (tw / 2, CAP, False, run), (W - tw / 2, CAP, False, -run)):
-        wedge(s, x, y, tw / 2, p.fl, p.soft, up=up, slope=sl)
+        wedge(s, x, y, tw / 2, p.fl, p.wedge_r, up=up, slope=sl)
     return s
 
 
@@ -337,8 +337,8 @@ def Y(p):
             tw = hwidth(xc, CAP, cx, yj, p.dstem)
         # each arm runs a hair past the centre line, so the two overlap
         # instead of sharing an edge
-        clipped(s, (xc, CAP), (cx, yj), p.dstem, (cx + (3 if xe == 0 else -3), 0), (0, 1))
-        wedge(s, xc, CAP, tw / 2, p.fl, p.soft, up=False, slope=(cx - xc) / (CAP - yj))
+        clipped(s, (xc, CAP), (cx, yj), p.dstem, (cx + (3 if xe == 0 else -3), 0), (0, 1), p.end_r)
+        wedge(s, xc, CAP, tw / 2, p.fl, p.wedge_r, up=False, slope=(cx - xc) / (CAP - yj))
     return s
 
 
@@ -351,13 +351,13 @@ def K(p):
     j_ = (xs, CAP * 0.3)
     tw = hwidth(j_[0], j_[1], Wk, CAP, p.dstem)
     top = (Wk - tw / 2, CAP)
-    clipped(s, top, j_, p.dstem, (xs, 0), (0, 1))
-    wedge(s, top[0], CAP, tw / 2, p.fl, p.soft, up=False, slope=(j_[0] - top[0]) / (CAP - j_[1]))
+    clipped(s, top, j_, p.dstem, (xs, 0), (0, 1), p.end_r)
+    wedge(s, top[0], CAP, tw / 2, p.fl, p.wedge_r, up=False, slope=(j_[0] - top[0]) / (CAP - j_[1]))
     lj = (lerp(j_[0], top[0], 0.4), lerp(j_[1], CAP, 0.4))
     tw2 = hwidth(lj[0], lj[1], Wk + p.W(10, 30), 0, p.dstem)
     foot = (Wk + p.W(10, 30) - tw2 / 2, 0)
-    clipped(s, foot, lj, p.dstem, lj, (top[0] - j_[0], top[1] - j_[1]))
-    wedge(s, foot[0], 0, tw2 / 2, p.fl, p.soft, slope=(lj[0] - foot[0]) / lj[1])
+    clipped(s, foot, lj, p.dstem, lj, (top[0] - j_[0], top[1] - j_[1]), p.end_r)
+    wedge(s, foot[0], 0, tw2 / 2, p.fl, p.wedge_r, slope=(lj[0] - foot[0]) / lj[1])
     return s
 
 

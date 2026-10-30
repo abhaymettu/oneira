@@ -156,7 +156,7 @@ def six(p):
     a = (m[0] - d[0] / ln * 2, m[1] - d[1] / ln * 2)  # start a hair inside the ring: overlap, no seam
     pts = limb(s, a, top, w, ("perp", "h"))
     tw = abs(pts[2][0] - pts[1][0])
-    wedge(s, top[0], FH, tw / 2, p.fl, p.soft, up=False, slope=(m[0] - top[0]) / (FH - m[1]))
+    wedge(s, top[0], FH, tw / 2, p.fl, p.wedge_r, up=False, slope=(m[0] - top[0]) / (FH - m[1]))
     return s
 
 
@@ -174,7 +174,7 @@ def seven(p):
     xr = lambda y: W + (y - hi) * k  # right edge, through the bar's lower corner
     y1, e = FH - p.sh * 0.5, 0.5
     s.poly([(xr(0) - tw, 0), (xr(0), 0), (W - e, hi), (W - e, y1), (xr(y1) - tw, y1)])
-    wedge(s, xr(0) - tw / 2, 0, tw / 2, p.fl, p.soft, up=True, slope=k)
+    wedge(s, xr(0) - tw / 2, 0, tw / 2, p.fl, p.wedge_r, up=True, slope=k)
     r = p.bar_r
     s.poly([(0, FH - p.sh), (W, FH - p.sh), (W, FH), (0, FH)], [r, 0, r, r])
     return s

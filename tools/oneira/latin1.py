@@ -142,7 +142,7 @@ def AE(p):
         tw = hwidth(tw / 2, 0, tx, CAP, p.dstem)
     fx = tw / 2
     limb(s, (fx, 0), (tx, CAP), p.dstem, ("h", "h"))
-    wedge(s, fx, 0, tw / 2, p.fl, p.soft, up=True, slope=(tx - fx) / CAP)
+    wedge(s, fx, 0, tw / 2, p.fl, p.wedge_r, up=True, slope=(tx - fx) / CAP)
     stem(s, p, xs, 0, CAP, head=False)
     r = p.bar_r
     x_tl = tx - tw / 2  # the diagonal's outer edge runs into the top arm's corner

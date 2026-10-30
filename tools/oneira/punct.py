@@ -622,5 +622,5 @@ def ampersand(p):
     foot = (W - p.dstem * 0.7, 0)
     pts = limb(s, start, foot, p.dstem, ("perp", "h"))
     tw = abs(pts[2][0] - pts[1][0])
-    wedge(s, foot[0], 0, tw / 2, p.fl, p.soft, up=True, slope=(start[0] - foot[0]) / start[1])
+    wedge(s, foot[0], 0, tw / 2, p.fl, p.wedge_r, up=True, slope=(start[0] - foot[0]) / start[1])
     return s

@@ -268,12 +268,12 @@ def _vee(s, p, xl, xr, top, bot):
     tw = p.dstem * 1.3
     for _ in range(4):
         tw = hwidth(xl + tw / 2, top, cx, bot, p.dstem)
-    diag(s, xl + tw / 2, top, cx, bot, p.dstem)
-    diag(s, xr - tw / 2, top, cx, bot, p.dstem)
+    diag(s, xl + tw / 2, top, cx, bot, p.dstem, ends=(p.end_r, 0))
+    diag(s, xr - tw / 2, top, cx, bot, p.dstem, ends=(p.end_r, 0))
     run = (cx - (xl + tw / 2)) / abs(top - bot)
     up = top < bot
-    wedge(s, xl + tw / 2, top, tw / 2, p.fl, p.soft, up=up, slope=run)
-    wedge(s, xr - tw / 2, top, tw / 2, p.fl, p.soft, up=up, slope=-run)
+    wedge(s, xl + tw / 2, top, tw / 2, p.fl, p.wedge_r, up=up, slope=run)
+    wedge(s, xr - tw / 2, top, tw / 2, p.fl, p.wedge_r, up=up, slope=-run)
     return tw
 
 
@@ -302,13 +302,13 @@ def x(p):
     tw = p.dstem * 1.3
     for _ in range(4):
         tw = hwidth(tw / 2, 0, W - tw / 2, XH, p.dstem)
-    diag(s, tw / 2, 0, W - tw / 2, XH, p.dstem)
-    diag(s, W - tw / 2, 0, tw / 2, XH, p.dstem)
+    diag(s, tw / 2, 0, W - tw / 2, XH, p.dstem, r=p.end_r)
+    diag(s, W - tw / 2, 0, tw / 2, XH, p.dstem, r=p.end_r)
     run = (W - tw) / XH
-    wedge(s, tw / 2, 0, tw / 2, p.fl, p.soft, up=True, slope=run)
-    wedge(s, W - tw / 2, 0, tw / 2, p.fl, p.soft, up=True, slope=-run)
-    wedge(s, tw / 2, XH, tw / 2, p.fl, p.soft, up=False, slope=run)
-    wedge(s, W - tw / 2, XH, tw / 2, p.fl, p.soft, up=False, slope=-run)
+    wedge(s, tw / 2, 0, tw / 2, p.fl, p.wedge_r, up=True, slope=run)
+    wedge(s, W - tw / 2, 0, tw / 2, p.fl, p.wedge_r, up=True, slope=-run)
+    wedge(s, tw / 2, XH, tw / 2, p.fl, p.wedge_r, up=False, slope=run)
+    wedge(s, W - tw / 2, XH, tw / 2, p.fl, p.wedge_r, up=False, slope=-run)
     return s
 
 
@@ -324,12 +324,12 @@ def y(p):
     xr_top = W - tw / 2
     run = (xr_top - cx) / XH
     tail = (cx - run * (0 - DESC), DESC)
-    diag(s, xr_top, XH, tail[0], DESC, p.dstem)
-    wedge(s, xr_top, XH, tw / 2, p.fl, p.soft, up=False, slope=-run)
-    wedge(s, tail[0], DESC, tw / 2, p.fl, p.soft, up=True, slope=run)
+    diag(s, xr_top, XH, tail[0], DESC, p.dstem, r=p.end_r)
+    wedge(s, xr_top, XH, tw / 2, p.fl, p.wedge_r, up=False, slope=-run)
+    wedge(s, tail[0], DESC, tw / 2, p.fl, p.wedge_r, up=True, slope=run)
     # the left stroke stops on the right stroke's centre line
-    clipped(s, (tw / 2, XH), (cx, 0), p.dstem, (cx, 0), (tail[0] - xr_top, DESC - XH))
-    wedge(s, tw / 2, XH, tw / 2, p.fl, p.soft, up=False, slope=(cx - tw / 2) / XH)
+    clipped(s, (tw / 2, XH), (cx, 0), p.dstem, (cx, 0), (tail[0] - xr_top, DESC - XH), p.end_r)
+    wedge(s, tw / 2, XH, tw / 2, p.fl, p.wedge_r, up=False, slope=(cx - tw / 2) / XH)
     return s
 
 
@@ -350,13 +350,13 @@ def k(p):
     j_ = (xs, XH * lerp(0.26, 0.32, p.t))
     tw = hwidth(j_[0], j_[1], Wk, XH, p.dstem)
     top = (Wk - tw / 2, XH)
-    clipped(s, top, j_, p.dstem, (xs, 0), (0, 1))
-    wedge(s, top[0], XH, tw / 2, p.fl, p.soft, up=False, slope=(j_[0] - top[0]) / (XH - j_[1]))
+    clipped(s, top, j_, p.dstem, (xs, 0), (0, 1), p.end_r)
+    wedge(s, top[0], XH, tw / 2, p.fl, p.wedge_r, up=False, slope=(j_[0] - top[0]) / (XH - j_[1]))
     lj = (lerp(j_[0], top[0], 0.42), lerp(j_[1], XH, 0.42))
     tw2 = hwidth(lj[0], lj[1], Wk, 0, p.dstem)
     foot = (Wk - tw2 / 2, 0)
-    clipped(s, foot, lj, p.dstem, lj, (top[0] - j_[0], top[1] - j_[1]))
-    wedge(s, foot[0], 0, tw2 / 2, p.fl, p.soft, slope=(lj[0] - foot[0]) / lj[1])
+    clipped(s, foot, lj, p.dstem, lj, (top[0] - j_[0], top[1] - j_[1]), p.end_r)
+    wedge(s, foot[0], 0, tw2 / 2, p.fl, p.wedge_r, slope=(lj[0] - foot[0]) / lj[1])
     return s
 
 
