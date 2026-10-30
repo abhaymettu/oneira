@@ -140,6 +140,27 @@
       <string>at</string>
       <string>dollar</string>
       <string>ampersand</string>
+      <string>uni00A0</string>
+      <string>uni00AD</string>
+      <string>cent</string>
+      <string>sterling</string>
+      <string>yen</string>
+      <string>Euro</string>
+      <string>currency</string>
+      <string>logicalnot</string>
+      <string>mu</string>
+      <string>paragraph</string>
+      <string>section</string>
+      <string>onesuperior</string>
+      <string>twosuperior</string>
+      <string>threesuperior</string>
+      <string>ordfeminine</string>
+      <string>ordmasculine</string>
+      <string>onequarter</string>
+      <string>onehalf</string>
+      <string>threequarters</string>
+      <string>copyright</string>
+      <string>registered</string>
       <string>grave</string>
       <string>acute</string>
       <string>dieresis</string>

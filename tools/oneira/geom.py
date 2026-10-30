@@ -46,6 +46,18 @@ class Shape:
         out.contours = [[(k, [(x + dx, y) for x, y in pts]) for k, pts in c] for c in self.contours]
         return out
 
+    def scaled(self, k, dx=0.0, dy=0.0):
+        """Uniform scale about the origin, then a shift."""
+        out = Shape()
+        out.contours = [[(kind, [(x * k + dx, y * k + dy) for x, y in pts]) for kind, pts in c]
+                        for c in self.contours]
+        return out
+
+    def merged(self, *others):
+        out = Shape()
+        out.contours = self.contours + [c for o in others for c in o.contours]
+        return out
+
     def rotated(self, cx, cy):
         """Half turn about (cx, cy). A rotation keeps contour direction."""
         out = Shape()
@@ -216,10 +228,11 @@ def diag(shape, x0, y0, x1, y1, stem, r=None):
     return tw
 
 
-def limb(shape, a, b, width, cuts=("perp", "perp")):
+def limb(shape, a, b, width, cuts=("perp", "perp"), r=None):
     """Straight stroke from a to b. Each end is cut square to the stroke
     ("perp") or along the horizontal ("h"). Returns the four corners
-    (a-side, b-side, b-side, a-side), so a tip or wedge can sit on an end."""
+    (a-side, b-side, b-side, a-side), so a tip or wedge can sit on an end.
+    r rounds the corners at each end."""
     ln = math.dist(a, b)
     d = ((b[0] - a[0]) / ln, (b[1] - a[1]) / ln)
 
@@ -235,7 +248,11 @@ def limb(shape, a, b, width, cuts=("perp", "perp")):
     a1, a2 = ends(a, cuts[0])
     b1, b2 = ends(b, cuts[1])
     pts = [a1, b1, b2, a2]
-    shape.poly(pts if _area(pts) > 0 else pts[::-1])
+    radii = None if r is None else [r[0], r[1], r[1], r[0]]  # r: (a-end, b-end) corner radii
+    if _area(pts) > 0:
+        shape.poly(pts, radii)
+    else:
+        shape.poly(pts[::-1], None if radii is None else radii[::-1])
     return pts
 
 
