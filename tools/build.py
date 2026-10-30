@@ -162,6 +162,47 @@ def finish(path):
     f.save(path)
 
 
+def drop_repeated_points(path):
+    """Removing overlaps and rounding to whole units leaves a few points on
+    top of the point before them, or a one unit spike out and back. A static
+    font never interpolates, so they can go."""
+    f = TTFont(path)
+    glyf = f["glyf"]
+    for name in glyf.keys():
+        g = glyf[name]
+        if g.isComposite() or g.numberOfContours <= 0:
+            continue
+        coords, ends, flags = g.getCoordinates(glyf)
+        pts, new_ends, new_flags, start = [], [], [], 0
+        for end in ends:
+            contour = list(zip(coords[start:end + 1], flags[start:end + 1]))
+            kept = []
+            for pt, fl in contour:
+                if kept and tuple(pt) == tuple(kept[-1][0]):
+                    if fl & 1:  # keep the on-curve one of the pair
+                        kept[-1] = (pt, fl)
+                    continue
+                if len(kept) > 1 and tuple(pt) == tuple(kept[-2][0]):  # out one unit and back
+                    kept.pop()
+                    continue
+                kept.append((pt, fl))
+            while len(kept) > 1 and tuple(kept[0][0]) == tuple(kept[-1][0]):
+                last = kept.pop()
+                if last[1] & 1:
+                    kept[0] = last
+            if len(kept) >= 3:
+                pts += [p for p, _ in kept]
+                new_flags += [fl for _, fl in kept]
+                new_ends.append(len(pts) - 1)
+            start = end + 1
+        g.coordinates = type(coords)(pts)
+        g.flags = bytearray(new_flags)
+        g.endPtsOfContours = new_ends
+        g.numberOfContours = len(new_ends)
+        g.recalcBounds(glyf)
+    f.save(path)
+
+
 def release():
     static = ROOT / "fonts" / "static"
     if static.exists():
@@ -173,6 +214,7 @@ def release():
         sys.exit(1)
     shutil.rmtree(SRC / "instances", ignore_errors=True)
     for ttf in static.glob("*.ttf"):
+        drop_repeated_points(ttf)
         finish(ttf)
     web = ROOT / "fonts" / "webfonts"
     web.mkdir(parents=True, exist_ok=True)
