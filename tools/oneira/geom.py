@@ -46,6 +46,13 @@ class Shape:
         out.contours = [[(k, [(x + dx, y) for x, y in pts]) for k, pts in c] for c in self.contours]
         return out
 
+    def rotated(self, cx, cy):
+        """Half turn about (cx, cy). A rotation keeps contour direction."""
+        out = Shape()
+        out.contours = [[(k, [(2 * cx - x, 2 * cy - y) for x, y in pts]) for k, pts in c]
+                        for c in self.contours]
+        return out
+
     def xbounds(self):
         """Exact ink extent, curve extremes included (an arc's widest point is
         often not an on-curve point)."""
@@ -200,6 +207,29 @@ def diag(shape, x0, y0, x1, y1, stem, r=None):
     pts = [(x0 - h, y0), (x0 + h, y0), (x1 + h, y1), (x1 - h, y1)]
     shape.poly(pts, None if r is None else [r] * 4)
     return tw
+
+
+def limb(shape, a, b, width, cuts=("perp", "perp")):
+    """Straight stroke from a to b. Each end is cut square to the stroke
+    ("perp") or along the horizontal ("h"). Returns the four corners
+    (a-side, b-side, b-side, a-side), so a tip or wedge can sit on an end."""
+    ln = math.dist(a, b)
+    d = ((b[0] - a[0]) / ln, (b[1] - a[1]) / ln)
+
+    n = (-d[1] * width / 2, d[0] * width / 2)
+
+    def ends(c, cut):
+        """The end's two corners, on the -n side first so both ends pair up."""
+        if cut == "h":
+            hw = width / 2 / max(abs(d[1]), 1e-9)
+            lo, hi = (c[0] - hw, c[1]), (c[0] + hw, c[1])
+            return (lo, hi) if n[0] > 0 else (hi, lo)
+        return (c[0] - n[0], c[1] - n[1]), (c[0] + n[0], c[1] + n[1])
+    a1, a2 = ends(a, cuts[0])
+    b1, b2 = ends(b, cuts[1])
+    pts = [a1, b1, b2, a2]
+    shape.poly(pts if _area(pts) > 0 else pts[::-1])
+    return pts
 
 
 def hwidth(x0, y0, x1, y1, stem):

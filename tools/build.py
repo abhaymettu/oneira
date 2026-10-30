@@ -10,7 +10,7 @@ import ufoLib2
 from fontTools.designspaceLib import AxisDescriptor, DesignSpaceDocument, SourceDescriptor
 
 sys.path.insert(0, str(Path(__file__).parent))
-from oneira import lower, upper  # noqa: E402,F401  (registers glyphs)
+from oneira import figures, lower, upper  # noqa: E402,F401  (registers glyphs)
 from oneira.params import ASC, CAP, DESC, GLYPHS, UPM, XH, build  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent

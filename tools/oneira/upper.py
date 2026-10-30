@@ -2,7 +2,7 @@
 
 import math
 
-from .geom import Shape, Tip, _area, arc, clipped, diag, ept, hwidth, lerp, wedge
+from .geom import Shape, Tip, arc, clipped, diag, ept, hwidth, lerp, limb, wedge
 from .params import CAP, OV, glyph
 from .parts import ell_x, hook, pointed, round_o, stem, zee
 
@@ -104,11 +104,7 @@ def Q(p):
     d = (math.cos(math.radians(-40)), math.sin(math.radians(-40)))
     ln = (start[1] + p.W(80, 96)) / -d[1]
     end = (start[0] + d[0] * ln, start[1] + d[1] * ln)
-    tw = p.dstem * 0.96
-    n = (-d[1] * tw / 2, d[0] * tw / 2)
-    pts = [(start[0] - n[0], start[1] - n[1]), (end[0] - n[0], end[1] - n[1]),
-           (end[0] + n[0], end[1] + n[1]), (start[0] + n[0], start[1] + n[1])]
-    s.poly(pts if _area(pts) > 0 else pts[::-1])
+    pts = limb(s, start, end, p.dstem * 0.96)
     p.tip().draw(s, pts[1], pts[2], (-d[0], -d[1]))
     return s
 

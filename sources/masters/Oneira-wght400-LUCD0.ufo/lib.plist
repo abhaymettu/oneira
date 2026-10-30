@@ -5,6 +5,16 @@
     <key>public.glyphOrder</key>
     <array>
       <string>.notdef</string>
+      <string>zero</string>
+      <string>one</string>
+      <string>two</string>
+      <string>three</string>
+      <string>four</string>
+      <string>five</string>
+      <string>six</string>
+      <string>seven</string>
+      <string>eight</string>
+      <string>nine</string>
       <string>o</string>
       <string>c</string>
       <string>e</string>
