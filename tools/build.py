@@ -26,6 +26,9 @@ VF = ROOT / "fonts" / "variable" / f"{FAMILY}[LUCD,wght].ttf"
 NAMES = {100: "Thin", 200: "ExtraLight", 300: "Light", 400: "Regular", 500: "Medium",
          600: "SemiBold", 700: "Bold", 800: "ExtraBold", 900: "Black"}
 FAMILIES = {100: FAMILY, 0: f"{FAMILY} Dream"}  # static families, one per end of Lucidity
+# where each named weight sits between the masters, so the grey of running
+# text darkens by equal steps on each side of Regular (tools/ramp.py --solve)
+WGHT_MAP = {100: 100, 200: 194, 300: 294, 400: 400, 500: 490, 600: 585, 700: 684, 800: 789, 900: 900}
 
 
 def notdef(f):
@@ -98,6 +101,7 @@ def main():
     ds = DesignSpaceDocument()
     wght_axis = AxisDescriptor(tag="wght", name="Weight", minimum=100, default=400, maximum=900)
     wght_axis.axisLabels = [AxisLabelDescriptor(name=n, userValue=v, elidable=v == 400) for v, n in NAMES.items()]
+    wght_axis.map = list(WGHT_MAP.items())
     lucd_axis = AxisDescriptor(tag="LUCD", name="Lucidity", minimum=0, default=100, maximum=100)
     lucd_axis.axisLabels = [AxisLabelDescriptor(name="Dream", userValue=0),
                             AxisLabelDescriptor(name="Lucid", userValue=100, elidable=True)]
@@ -117,13 +121,13 @@ def main():
         for wght, style in NAMES.items():
             loc = {"Weight": wght, "Lucidity": lucd}
             vf_style = style if lucd == 100 else ("Dream" if style == "Regular" else f"Dream {style}")
-            ds.addInstance(InstanceDescriptor(familyName=FAMILY, styleName=vf_style, location=loc))
+            ds.addInstance(InstanceDescriptor(familyName=FAMILY, styleName=vf_style, userLocation=loc))
             ps = f"{fam.replace(' ', '')}-{style}"
             static.addInstance(InstanceDescriptor(
                 familyName=fam, styleName=style, postScriptFontName=ps,
                 styleMapFamilyName=fam if style in ("Regular", "Bold") else f"{fam} {style}",
                 styleMapStyleName="bold" if style == "Bold" else "regular",
-                location=loc, filename=f"instances/{ps}.ufo"))
+                userLocation=loc, filename=f"instances/{ps}.ufo"))
     ds.write(SRC / f"{FAMILY}.designspace")
     static.write(SRC / f"{FAMILY}-static.designspace")
     print(f"{len(GLYPHS) + len(COMPOSITES)} glyphs x {len(WEIGHTS) * len(LUCIDITY)} masters")
