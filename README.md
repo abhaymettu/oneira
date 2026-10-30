@@ -5,9 +5,7 @@
 
 # Oneira
 
-A variable typeface where every stroke ends in the same triangle. Two axes: **Weight** from 100 to 900, and **Lucidity** from 0 (dream, soft and round) to 100 (lucid, sharp triangles).
-
-We recommend **Lucidity 25** for most text.
+A variable typeface where every stroke ends in the same triangle. Two axes: **Weight** from 100 to 900, and **Lucidity** from 0 (dream, soft and round) to 100 (lucid, sharp triangles). Lucidity defaults to **25**, our pick for most text.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/weight-dark.png">
@@ -23,7 +21,7 @@ We recommend **Lucidity 25** for most text.
 
 ## Install
 
-[Download](https://github.com/abhaymettu/oneira/archive/refs/heads/main.zip) and use `fonts/variable/Oneira[LUCD,wght].ttf`. Static files are in `fonts/static` and WOFF2 in `fonts/webfonts`.
+[Download](https://github.com/abhaymettu/oneira/archive/refs/heads/main.zip) and use `fonts/variable/Oneira[LUCD,wght].ttf`. Static files are in `fonts/static`: Oneira (Lucidity 25), Oneira Dream (0) and Oneira Lucid (100). WOFF2 files are in `fonts/webfonts`.
 
 ## Web
 
@@ -36,7 +34,10 @@ We recommend **Lucidity 25** for most text.
 
 body {
   font-family: "Oneira";
-  font-variation-settings: "LUCD" 25;
+}
+
+h1 {
+  font-variation-settings: "LUCD" 100;
 }
 ```
 

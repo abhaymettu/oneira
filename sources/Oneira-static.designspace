@@ -23,10 +23,11 @@
         <label uservalue="900" name="Black"/>
       </labels>
     </axis>
-    <axis tag="LUCD" name="Lucidity" minimum="0" maximum="100" default="100">
+    <axis tag="LUCD" name="Lucidity" minimum="0" maximum="100" default="25">
       <labels>
         <label uservalue="0" name="Dream"/>
-        <label uservalue="100" name="Lucid" elidable="true"/>
+        <label uservalue="25" name="Regular" elidable="true"/>
+        <label uservalue="100" name="Lucid"/>
       </labels>
     </axis>
   </axes>
@@ -35,6 +36,12 @@
       <location>
         <dimension name="Weight" xvalue="100"/>
         <dimension name="Lucidity" xvalue="0"/>
+      </location>
+    </source>
+    <source filename="masters/Oneira-wght100-LUCD25.ufo" familyname="Oneira" stylename="wght100 LUCD25">
+      <location>
+        <dimension name="Weight" xvalue="100"/>
+        <dimension name="Lucidity" xvalue="25"/>
       </location>
     </source>
     <source filename="masters/Oneira-wght100-LUCD100.ufo" familyname="Oneira" stylename="wght100 LUCD100">
@@ -49,7 +56,13 @@
         <dimension name="Lucidity" xvalue="0"/>
       </location>
     </source>
-    <source filename="masters/Oneira-wght400-LUCD100.ufo" familyname="Oneira" stylename="Regular">
+    <source filename="masters/Oneira-wght400-LUCD25.ufo" familyname="Oneira" stylename="Regular">
+      <location>
+        <dimension name="Weight" xvalue="400"/>
+        <dimension name="Lucidity" xvalue="25"/>
+      </location>
+    </source>
+    <source filename="masters/Oneira-wght400-LUCD100.ufo" familyname="Oneira" stylename="wght400 LUCD100">
       <location>
         <dimension name="Weight" xvalue="400"/>
         <dimension name="Lucidity" xvalue="100"/>
@@ -59,6 +72,12 @@
       <location>
         <dimension name="Weight" xvalue="900"/>
         <dimension name="Lucidity" xvalue="0"/>
+      </location>
+    </source>
+    <source filename="masters/Oneira-wght900-LUCD25.ufo" familyname="Oneira" stylename="wght900 LUCD25">
+      <location>
+        <dimension name="Weight" xvalue="900"/>
+        <dimension name="Lucidity" xvalue="25"/>
       </location>
     </source>
     <source filename="masters/Oneira-wght900-LUCD100.ufo" familyname="Oneira" stylename="wght900 LUCD100">
@@ -72,55 +91,55 @@
     <instance familyname="Oneira" stylename="Thin" filename="instances/Oneira-Thin.ufo" postscriptfontname="Oneira-Thin" stylemapfamilyname="Oneira Thin" stylemapstylename="regular">
       <location>
         <dimension name="Weight" uservalue="100"/>
-        <dimension name="Lucidity" uservalue="100"/>
+        <dimension name="Lucidity" uservalue="25"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="ExtraLight" filename="instances/Oneira-ExtraLight.ufo" postscriptfontname="Oneira-ExtraLight" stylemapfamilyname="Oneira ExtraLight" stylemapstylename="regular">
       <location>
         <dimension name="Weight" uservalue="200"/>
-        <dimension name="Lucidity" uservalue="100"/>
+        <dimension name="Lucidity" uservalue="25"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Light" filename="instances/Oneira-Light.ufo" postscriptfontname="Oneira-Light" stylemapfamilyname="Oneira Light" stylemapstylename="regular">
       <location>
         <dimension name="Weight" uservalue="300"/>
-        <dimension name="Lucidity" uservalue="100"/>
+        <dimension name="Lucidity" uservalue="25"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Regular" filename="instances/Oneira-Regular.ufo" postscriptfontname="Oneira-Regular" stylemapfamilyname="Oneira" stylemapstylename="regular">
       <location>
         <dimension name="Weight" uservalue="400"/>
-        <dimension name="Lucidity" uservalue="100"/>
+        <dimension name="Lucidity" uservalue="25"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Medium" filename="instances/Oneira-Medium.ufo" postscriptfontname="Oneira-Medium" stylemapfamilyname="Oneira Medium" stylemapstylename="regular">
       <location>
         <dimension name="Weight" uservalue="500"/>
-        <dimension name="Lucidity" uservalue="100"/>
+        <dimension name="Lucidity" uservalue="25"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="SemiBold" filename="instances/Oneira-SemiBold.ufo" postscriptfontname="Oneira-SemiBold" stylemapfamilyname="Oneira SemiBold" stylemapstylename="regular">
       <location>
         <dimension name="Weight" uservalue="600"/>
-        <dimension name="Lucidity" uservalue="100"/>
+        <dimension name="Lucidity" uservalue="25"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Bold" filename="instances/Oneira-Bold.ufo" postscriptfontname="Oneira-Bold" stylemapfamilyname="Oneira" stylemapstylename="bold">
       <location>
         <dimension name="Weight" uservalue="700"/>
-        <dimension name="Lucidity" uservalue="100"/>
+        <dimension name="Lucidity" uservalue="25"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="ExtraBold" filename="instances/Oneira-ExtraBold.ufo" postscriptfontname="Oneira-ExtraBold" stylemapfamilyname="Oneira ExtraBold" stylemapstylename="regular">
       <location>
         <dimension name="Weight" uservalue="800"/>
-        <dimension name="Lucidity" uservalue="100"/>
+        <dimension name="Lucidity" uservalue="25"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Black" filename="instances/Oneira-Black.ufo" postscriptfontname="Oneira-Black" stylemapfamilyname="Oneira Black" stylemapstylename="regular">
       <location>
         <dimension name="Weight" uservalue="900"/>
-        <dimension name="Lucidity" uservalue="100"/>
+        <dimension name="Lucidity" uservalue="25"/>
       </location>
     </instance>
     <instance familyname="Oneira Dream" stylename="Thin" filename="instances/OneiraDream-Thin.ufo" postscriptfontname="OneiraDream-Thin" stylemapfamilyname="Oneira Dream Thin" stylemapstylename="regular">
@@ -175,6 +194,60 @@
       <location>
         <dimension name="Weight" uservalue="900"/>
         <dimension name="Lucidity" uservalue="0"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira Lucid" stylename="Thin" filename="instances/OneiraLucid-Thin.ufo" postscriptfontname="OneiraLucid-Thin" stylemapfamilyname="Oneira Lucid Thin" stylemapstylename="regular">
+      <location>
+        <dimension name="Weight" uservalue="100"/>
+        <dimension name="Lucidity" uservalue="100"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira Lucid" stylename="ExtraLight" filename="instances/OneiraLucid-ExtraLight.ufo" postscriptfontname="OneiraLucid-ExtraLight" stylemapfamilyname="Oneira Lucid ExtraLight" stylemapstylename="regular">
+      <location>
+        <dimension name="Weight" uservalue="200"/>
+        <dimension name="Lucidity" uservalue="100"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira Lucid" stylename="Light" filename="instances/OneiraLucid-Light.ufo" postscriptfontname="OneiraLucid-Light" stylemapfamilyname="Oneira Lucid Light" stylemapstylename="regular">
+      <location>
+        <dimension name="Weight" uservalue="300"/>
+        <dimension name="Lucidity" uservalue="100"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira Lucid" stylename="Regular" filename="instances/OneiraLucid-Regular.ufo" postscriptfontname="OneiraLucid-Regular" stylemapfamilyname="Oneira Lucid" stylemapstylename="regular">
+      <location>
+        <dimension name="Weight" uservalue="400"/>
+        <dimension name="Lucidity" uservalue="100"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira Lucid" stylename="Medium" filename="instances/OneiraLucid-Medium.ufo" postscriptfontname="OneiraLucid-Medium" stylemapfamilyname="Oneira Lucid Medium" stylemapstylename="regular">
+      <location>
+        <dimension name="Weight" uservalue="500"/>
+        <dimension name="Lucidity" uservalue="100"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira Lucid" stylename="SemiBold" filename="instances/OneiraLucid-SemiBold.ufo" postscriptfontname="OneiraLucid-SemiBold" stylemapfamilyname="Oneira Lucid SemiBold" stylemapstylename="regular">
+      <location>
+        <dimension name="Weight" uservalue="600"/>
+        <dimension name="Lucidity" uservalue="100"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira Lucid" stylename="Bold" filename="instances/OneiraLucid-Bold.ufo" postscriptfontname="OneiraLucid-Bold" stylemapfamilyname="Oneira Lucid" stylemapstylename="bold">
+      <location>
+        <dimension name="Weight" uservalue="700"/>
+        <dimension name="Lucidity" uservalue="100"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira Lucid" stylename="ExtraBold" filename="instances/OneiraLucid-ExtraBold.ufo" postscriptfontname="OneiraLucid-ExtraBold" stylemapfamilyname="Oneira Lucid ExtraBold" stylemapstylename="regular">
+      <location>
+        <dimension name="Weight" uservalue="800"/>
+        <dimension name="Lucidity" uservalue="100"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira Lucid" stylename="Black" filename="instances/OneiraLucid-Black.ufo" postscriptfontname="OneiraLucid-Black" stylemapfamilyname="Oneira Lucid Black" stylemapstylename="regular">
+      <location>
+        <dimension name="Weight" uservalue="900"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
   </instances>

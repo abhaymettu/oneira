@@ -8,7 +8,7 @@ triangle itself. Corners are softened, never razor sharp.
 The second axis, **Lucidity** (`LUCD`), runs from dream to waking. At 0 the
 face is a soft geometric sans: no wedges, round dots, rounder corners. At 100
 the triangles have fully grown in and the corners tighten. Weight (`wght`)
-runs from 100 (Thin) to 900 (Black).
+runs from 100 (Thin) to 900 (Black). Lucidity defaults to 25.
 
 ## Metrics
 

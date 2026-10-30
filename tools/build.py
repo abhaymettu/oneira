@@ -2,6 +2,7 @@
 usage: python tools/build.py [--no-compile] [--release]
 --release also writes static instances (overlaps removed) and WOFF2 files."""
 
+import copy
 import shutil
 import subprocess
 import sys
@@ -10,6 +11,7 @@ from pathlib import Path
 import ufoLib2
 from fontTools.designspaceLib import (AxisDescriptor, AxisLabelDescriptor, DesignSpaceDocument, InstanceDescriptor,
                                       SourceDescriptor)
+from fontTools.misc.transform import Transform
 from fontTools.ttLib import TTFont
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -21,11 +23,13 @@ ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "sources"
 FAMILY = "Oneira"
 WEIGHTS = (100, 400, 900)
-LUCIDITY = (0, 100)
+LUCIDITY = (0, 25, 100)
+DEFAULT_LUCD = 25  # the recommended setting for text, so it is what you get with no settings
 VF = ROOT / "fonts" / "variable" / f"{FAMILY}[LUCD,wght].ttf"
 NAMES = {100: "Thin", 200: "ExtraLight", 300: "Light", 400: "Regular", 500: "Medium",
          600: "SemiBold", 700: "Bold", 800: "ExtraBold", 900: "Black"}
-FAMILIES = {100: FAMILY, 0: f"{FAMILY} Dream"}  # static families, one per end of Lucidity
+FAMILIES = {DEFAULT_LUCD: FAMILY, 0: f"{FAMILY} Dream", 100: f"{FAMILY} Lucid"}  # static families
+PREFIX = {0: "Dream", 100: "Lucid"}
 # where each named weight sits between the masters, so the grey of running
 # text darkens by equal steps on each side of Regular (tools/ramp.py --solve)
 WGHT_MAP = {100: 100, 200: 194, 300: 294, 400: 400, 500: 490, 600: 585, 700: 684, 800: 789, 900: 900}
@@ -42,15 +46,42 @@ def notdef(f):
         pen.closePath()
 
 
+def style_of(wght, lucd):
+    return "Regular" if (wght, lucd) == (400, DEFAULT_LUCD) else f"wght{wght} LUCD{lucd}"
+
+
+def blend(lo, hi, lucd):
+    """A master between the dream and lucid drawings, as their straight mix, so
+    every Lucidity looks exactly as it did with the two end masters alone."""
+    k = lucd / 100
+
+    def mix(a, b):
+        return a + (b - a) * k
+    f = copy.deepcopy(lo)
+    f.info.styleName = style_of(f.info.openTypeOS2WeightClass, lucd)
+    for g in f:
+        h = hi[g.name]
+        g.width = round(mix(g.width, h.width))
+        for c, ch in zip(g.contours, h.contours, strict=True):
+            for pt, ph in zip(c.points, ch.points, strict=True):
+                pt.x, pt.y = mix(pt.x, ph.x), mix(pt.y, ph.y)
+        for c, ch in zip(g.components, h.components, strict=True):
+            c.transformation = Transform(*(mix(a, b) for a, b in zip(c.transformation, ch.transformation)))
+    f.kerning.clear()
+    f.kerning.update({pair: round(mix(lo.kerning.get(pair, 0), hi.kerning.get(pair, 0)))
+                      for pair in lo.kerning.keys() | hi.kerning.keys()})
+    return f
+
+
 def master(wght, lucd):
     t, w = (wght - 100) / 800, lucd / 100
     f = ufoLib2.Font()
     i = f.info
     i.familyName = FAMILY
-    i.styleName = "Regular" if (wght, lucd) == (400, 100) else f"wght{wght} LUCD{lucd}"
+    i.styleName = style_of(wght, lucd)
     i.unitsPerEm, i.ascender, i.descender = UPM, ASC, DESC
     i.capHeight, i.xHeight = CAP, XH
-    i.versionMajor, i.versionMinor = 0, 200
+    i.versionMajor, i.versionMinor = 0, 300
     i.copyright = "Copyright 2026 The Oneira Project Authors (https://github.com/abhaymettu/oneira)"
     i.openTypeNameLicense = ("This Font Software is licensed under the SIL Open Font License, Version 1.1. "
                              "This license is available with a FAQ at: https://openfontlicense.org")
@@ -102,25 +133,28 @@ def main():
     wght_axis = AxisDescriptor(tag="wght", name="Weight", minimum=100, default=400, maximum=900)
     wght_axis.axisLabels = [AxisLabelDescriptor(name=n, userValue=v, elidable=v == 400) for v, n in NAMES.items()]
     wght_axis.map = list(WGHT_MAP.items())
-    lucd_axis = AxisDescriptor(tag="LUCD", name="Lucidity", minimum=0, default=100, maximum=100)
+    lucd_axis = AxisDescriptor(tag="LUCD", name="Lucidity", minimum=0, default=DEFAULT_LUCD, maximum=100)
     lucd_axis.axisLabels = [AxisLabelDescriptor(name="Dream", userValue=0),
-                            AxisLabelDescriptor(name="Lucid", userValue=100, elidable=True)]
+                            AxisLabelDescriptor(name="Regular", userValue=DEFAULT_LUCD, elidable=True),
+                            AxisLabelDescriptor(name="Lucid", userValue=100)]
     ds.addAxis(wght_axis)
     ds.addAxis(lucd_axis)
     for wght in WEIGHTS:
+        ends = {lucd: master(wght, lucd) for lucd in (0, 100)}
         for lucd in LUCIDITY:
             name = f"{FAMILY}-wght{wght}-LUCD{lucd}.ufo"
-            master(wght, lucd).save(SRC / "masters" / name)
-            ds.addSource(SourceDescriptor(filename=f"masters/{name}", familyName=FAMILY,
-                                          styleName="Regular" if (wght, lucd) == (400, 100) else f"wght{wght} LUCD{lucd}",
+            f = ends[lucd] if lucd in ends else blend(ends[0], ends[100], lucd)
+            f.save(SRC / "masters" / name)
+            ds.addSource(SourceDescriptor(filename=f"masters/{name}", familyName=FAMILY, styleName=style_of(wght, lucd),
                                           location={"Weight": wght, "Lucidity": lucd}))
-    # the variable font names its instances "Bold", "Dream Bold"; the static
-    # families are "Oneira" and "Oneira Dream", so they get their own document
+    # the variable font names its instances "Bold", "Dream Bold", "Lucid Bold"; the
+    # static families are "Oneira", "Oneira Dream", "Oneira Lucid", so they get their own document
     static = DesignSpaceDocument.fromstring(ds.tostring())
     for lucd, fam in FAMILIES.items():
         for wght, style in NAMES.items():
             loc = {"Weight": wght, "Lucidity": lucd}
-            vf_style = style if lucd == 100 else ("Dream" if style == "Regular" else f"Dream {style}")
+            pre = PREFIX.get(lucd)
+            vf_style = style if not pre else (pre if style == "Regular" else f"{pre} {style}")
             ds.addInstance(InstanceDescriptor(familyName=FAMILY, styleName=vf_style, userLocation=loc))
             ps = f"{fam.replace(' ', '')}-{style}"
             static.addInstance(InstanceDescriptor(
