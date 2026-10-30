@@ -50,7 +50,7 @@ def master(wght, lucd):
     i.openTypeOS2WeightClass = wght
     f.glyphOrder = [".notdef"] + list(GLYPHS)
     notdef(f)
-    for name, (uni, _, _) in GLYPHS.items():
+    for name, (uni, *_) in GLYPHS.items():
         shape, adv = build(name, t, w)
         g = f.newGlyph(name)
         if uni is not None:

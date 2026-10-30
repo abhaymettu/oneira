@@ -37,11 +37,14 @@ class P:
 GLYPHS = {}
 
 
-def glyph(name, uni, sides=None):
+def glyph(name, uni, sides=None, air=None):
     """Register a drawing. sides: two of S (straight), R (round), D (diagonal),
     O (open: bars, arms, terminals), or None for a fixed advance."""
+    if air is None:  # capitals want more room than lowercase
+        air = 1.28 if name[:1].isupper() else 1.0
+
     def deco(fn):
-        GLYPHS[name] = (uni, fn, sides)
+        GLYPHS[name] = (uni, fn, sides, air)
         return fn
     return deco
 
@@ -57,10 +60,10 @@ def build(name, t, w):
     """Shape and advance for one master. Spaced glyphs return a Shape and are
     measured on the dream state (w=0), so wedges hang into the gap like serifs.
     Unspaced glyphs return (Shape, advance)."""
-    uni, fn, sides = GLYPHS[name]
+    uni, fn, sides, air = GLYPHS[name]
     p = P(t, w)
     if sides is None:
         return fn(p)
     x0, x1 = fn(P(t, 0)).xbounds()
-    lsb, rsb = sidebearing(sides[0], p), sidebearing(sides[1], p)
+    lsb, rsb = sidebearing(sides[0], p) * air, sidebearing(sides[1], p) * air
     return fn(p).moved(lsb - x0), x1 - x0 + lsb + rsb
