@@ -10,6 +10,7 @@ import math
 from fontTools.pens.boundsPen import BoundsPen
 
 SQRT3 = math.sqrt(3)
+MIN_R = 2.0
 
 
 def lerp(a, b, t):
@@ -22,8 +23,9 @@ class Shape:
 
     def poly(self, pts, radii=None):
         """Closed polygon, counter-clockwise. radii rounds each corner; a
-        rounded polygon always emits two on-curve points per corner, even when
-        a radius clamps to zero, so point counts never change."""
+        rounded polygon always emits two on-curve points per corner, so point
+        counts never change. A corner is never rounded by less than MIN_R:
+        a zero radius would leave a zero-length curve in the font."""
         if radii is None:
             self.contours.append([("line", [p]) for p in pts])
             return
@@ -32,7 +34,7 @@ class Shape:
         for i, v in enumerate(pts):
             # a corner may use a whole edge when the corner at its other end is sharp
             share = (0.5 if radii[i - 1] else 1.0, 0.5 if radii[(i + 1) % n] else 1.0)
-            a, b = _round_corner(pts[i - 1], v, pts[(i + 1) % n], radii[i], share)
+            a, b = _round_corner(pts[i - 1], v, pts[(i + 1) % n], max(radii[i], MIN_R), share)
             c.append(("line", [a[0]]))
             c.append(("curve", [a[1], b[1], b[0]]))
         self.contours.append(c)

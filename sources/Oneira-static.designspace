@@ -2,6 +2,15 @@
 <designspace format="5.0">
   <axes>
     <axis tag="wght" name="Weight" minimum="100" maximum="900" default="400">
+      <map input="100" output="100"/>
+      <map input="200" output="194"/>
+      <map input="300" output="294"/>
+      <map input="400" output="400"/>
+      <map input="500" output="490"/>
+      <map input="600" output="585"/>
+      <map input="700" output="684"/>
+      <map input="800" output="789"/>
+      <map input="900" output="900"/>
       <labels>
         <label uservalue="100" name="Thin"/>
         <label uservalue="200" name="ExtraLight"/>
@@ -62,110 +71,110 @@
   <instances>
     <instance familyname="Oneira" stylename="Thin" filename="instances/Oneira-Thin.ufo" postscriptfontname="Oneira-Thin" stylemapfamilyname="Oneira Thin" stylemapstylename="regular">
       <location>
-        <dimension name="Weight" xvalue="100"/>
-        <dimension name="Lucidity" xvalue="100"/>
+        <dimension name="Weight" uservalue="100"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="ExtraLight" filename="instances/Oneira-ExtraLight.ufo" postscriptfontname="Oneira-ExtraLight" stylemapfamilyname="Oneira ExtraLight" stylemapstylename="regular">
       <location>
-        <dimension name="Weight" xvalue="200"/>
-        <dimension name="Lucidity" xvalue="100"/>
+        <dimension name="Weight" uservalue="200"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Light" filename="instances/Oneira-Light.ufo" postscriptfontname="Oneira-Light" stylemapfamilyname="Oneira Light" stylemapstylename="regular">
       <location>
-        <dimension name="Weight" xvalue="300"/>
-        <dimension name="Lucidity" xvalue="100"/>
+        <dimension name="Weight" uservalue="300"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Regular" filename="instances/Oneira-Regular.ufo" postscriptfontname="Oneira-Regular" stylemapfamilyname="Oneira" stylemapstylename="regular">
       <location>
-        <dimension name="Weight" xvalue="400"/>
-        <dimension name="Lucidity" xvalue="100"/>
+        <dimension name="Weight" uservalue="400"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Medium" filename="instances/Oneira-Medium.ufo" postscriptfontname="Oneira-Medium" stylemapfamilyname="Oneira Medium" stylemapstylename="regular">
       <location>
-        <dimension name="Weight" xvalue="500"/>
-        <dimension name="Lucidity" xvalue="100"/>
+        <dimension name="Weight" uservalue="500"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="SemiBold" filename="instances/Oneira-SemiBold.ufo" postscriptfontname="Oneira-SemiBold" stylemapfamilyname="Oneira SemiBold" stylemapstylename="regular">
       <location>
-        <dimension name="Weight" xvalue="600"/>
-        <dimension name="Lucidity" xvalue="100"/>
+        <dimension name="Weight" uservalue="600"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Bold" filename="instances/Oneira-Bold.ufo" postscriptfontname="Oneira-Bold" stylemapfamilyname="Oneira" stylemapstylename="bold">
       <location>
-        <dimension name="Weight" xvalue="700"/>
-        <dimension name="Lucidity" xvalue="100"/>
+        <dimension name="Weight" uservalue="700"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="ExtraBold" filename="instances/Oneira-ExtraBold.ufo" postscriptfontname="Oneira-ExtraBold" stylemapfamilyname="Oneira ExtraBold" stylemapstylename="regular">
       <location>
-        <dimension name="Weight" xvalue="800"/>
-        <dimension name="Lucidity" xvalue="100"/>
+        <dimension name="Weight" uservalue="800"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Black" filename="instances/Oneira-Black.ufo" postscriptfontname="Oneira-Black" stylemapfamilyname="Oneira Black" stylemapstylename="regular">
       <location>
-        <dimension name="Weight" xvalue="900"/>
-        <dimension name="Lucidity" xvalue="100"/>
+        <dimension name="Weight" uservalue="900"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
     <instance familyname="Oneira Dream" stylename="Thin" filename="instances/OneiraDream-Thin.ufo" postscriptfontname="OneiraDream-Thin" stylemapfamilyname="Oneira Dream Thin" stylemapstylename="regular">
       <location>
-        <dimension name="Weight" xvalue="100"/>
-        <dimension name="Lucidity" xvalue="0"/>
+        <dimension name="Weight" uservalue="100"/>
+        <dimension name="Lucidity" uservalue="0"/>
       </location>
     </instance>
     <instance familyname="Oneira Dream" stylename="ExtraLight" filename="instances/OneiraDream-ExtraLight.ufo" postscriptfontname="OneiraDream-ExtraLight" stylemapfamilyname="Oneira Dream ExtraLight" stylemapstylename="regular">
       <location>
-        <dimension name="Weight" xvalue="200"/>
-        <dimension name="Lucidity" xvalue="0"/>
+        <dimension name="Weight" uservalue="200"/>
+        <dimension name="Lucidity" uservalue="0"/>
       </location>
     </instance>
     <instance familyname="Oneira Dream" stylename="Light" filename="instances/OneiraDream-Light.ufo" postscriptfontname="OneiraDream-Light" stylemapfamilyname="Oneira Dream Light" stylemapstylename="regular">
       <location>
-        <dimension name="Weight" xvalue="300"/>
-        <dimension name="Lucidity" xvalue="0"/>
+        <dimension name="Weight" uservalue="300"/>
+        <dimension name="Lucidity" uservalue="0"/>
       </location>
     </instance>
     <instance familyname="Oneira Dream" stylename="Regular" filename="instances/OneiraDream-Regular.ufo" postscriptfontname="OneiraDream-Regular" stylemapfamilyname="Oneira Dream" stylemapstylename="regular">
       <location>
-        <dimension name="Weight" xvalue="400"/>
-        <dimension name="Lucidity" xvalue="0"/>
+        <dimension name="Weight" uservalue="400"/>
+        <dimension name="Lucidity" uservalue="0"/>
       </location>
     </instance>
     <instance familyname="Oneira Dream" stylename="Medium" filename="instances/OneiraDream-Medium.ufo" postscriptfontname="OneiraDream-Medium" stylemapfamilyname="Oneira Dream Medium" stylemapstylename="regular">
       <location>
-        <dimension name="Weight" xvalue="500"/>
-        <dimension name="Lucidity" xvalue="0"/>
+        <dimension name="Weight" uservalue="500"/>
+        <dimension name="Lucidity" uservalue="0"/>
       </location>
     </instance>
     <instance familyname="Oneira Dream" stylename="SemiBold" filename="instances/OneiraDream-SemiBold.ufo" postscriptfontname="OneiraDream-SemiBold" stylemapfamilyname="Oneira Dream SemiBold" stylemapstylename="regular">
       <location>
-        <dimension name="Weight" xvalue="600"/>
-        <dimension name="Lucidity" xvalue="0"/>
+        <dimension name="Weight" uservalue="600"/>
+        <dimension name="Lucidity" uservalue="0"/>
       </location>
     </instance>
     <instance familyname="Oneira Dream" stylename="Bold" filename="instances/OneiraDream-Bold.ufo" postscriptfontname="OneiraDream-Bold" stylemapfamilyname="Oneira Dream" stylemapstylename="bold">
       <location>
-        <dimension name="Weight" xvalue="700"/>
-        <dimension name="Lucidity" xvalue="0"/>
+        <dimension name="Weight" uservalue="700"/>
+        <dimension name="Lucidity" uservalue="0"/>
       </location>
     </instance>
     <instance familyname="Oneira Dream" stylename="ExtraBold" filename="instances/OneiraDream-ExtraBold.ufo" postscriptfontname="OneiraDream-ExtraBold" stylemapfamilyname="Oneira Dream ExtraBold" stylemapstylename="regular">
       <location>
-        <dimension name="Weight" xvalue="800"/>
-        <dimension name="Lucidity" xvalue="0"/>
+        <dimension name="Weight" uservalue="800"/>
+        <dimension name="Lucidity" uservalue="0"/>
       </location>
     </instance>
     <instance familyname="Oneira Dream" stylename="Black" filename="instances/OneiraDream-Black.ufo" postscriptfontname="OneiraDream-Black" stylemapfamilyname="Oneira Dream Black" stylemapstylename="regular">
       <location>
-        <dimension name="Weight" xvalue="900"/>
-        <dimension name="Lucidity" xvalue="0"/>
+        <dimension name="Weight" uservalue="900"/>
+        <dimension name="Lucidity" uservalue="0"/>
       </location>
     </instance>
   </instances>

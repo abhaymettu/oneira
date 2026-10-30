@@ -2,6 +2,15 @@
 <designspace format="5.0">
   <axes>
     <axis tag="wght" name="Weight" minimum="100" maximum="900" default="400">
+      <map input="100" output="100"/>
+      <map input="200" output="194"/>
+      <map input="300" output="294"/>
+      <map input="400" output="400"/>
+      <map input="500" output="490"/>
+      <map input="600" output="585"/>
+      <map input="700" output="684"/>
+      <map input="800" output="789"/>
+      <map input="900" output="900"/>
       <labels>
         <label uservalue="100" name="Thin"/>
         <label uservalue="200" name="ExtraLight"/>
@@ -62,110 +71,110 @@
   <instances>
     <instance familyname="Oneira" stylename="Thin">
       <location>
-        <dimension name="Weight" xvalue="100"/>
-        <dimension name="Lucidity" xvalue="100"/>
+        <dimension name="Weight" uservalue="100"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="ExtraLight">
       <location>
-        <dimension name="Weight" xvalue="200"/>
-        <dimension name="Lucidity" xvalue="100"/>
+        <dimension name="Weight" uservalue="200"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Light">
       <location>
-        <dimension name="Weight" xvalue="300"/>
-        <dimension name="Lucidity" xvalue="100"/>
+        <dimension name="Weight" uservalue="300"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Regular">
       <location>
-        <dimension name="Weight" xvalue="400"/>
-        <dimension name="Lucidity" xvalue="100"/>
+        <dimension name="Weight" uservalue="400"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Medium">
       <location>
-        <dimension name="Weight" xvalue="500"/>
-        <dimension name="Lucidity" xvalue="100"/>
+        <dimension name="Weight" uservalue="500"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="SemiBold">
       <location>
-        <dimension name="Weight" xvalue="600"/>
-        <dimension name="Lucidity" xvalue="100"/>
+        <dimension name="Weight" uservalue="600"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Bold">
       <location>
-        <dimension name="Weight" xvalue="700"/>
-        <dimension name="Lucidity" xvalue="100"/>
+        <dimension name="Weight" uservalue="700"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="ExtraBold">
       <location>
-        <dimension name="Weight" xvalue="800"/>
-        <dimension name="Lucidity" xvalue="100"/>
+        <dimension name="Weight" uservalue="800"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Black">
       <location>
-        <dimension name="Weight" xvalue="900"/>
-        <dimension name="Lucidity" xvalue="100"/>
+        <dimension name="Weight" uservalue="900"/>
+        <dimension name="Lucidity" uservalue="100"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Dream Thin">
       <location>
-        <dimension name="Weight" xvalue="100"/>
-        <dimension name="Lucidity" xvalue="0"/>
+        <dimension name="Weight" uservalue="100"/>
+        <dimension name="Lucidity" uservalue="0"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Dream ExtraLight">
       <location>
-        <dimension name="Weight" xvalue="200"/>
-        <dimension name="Lucidity" xvalue="0"/>
+        <dimension name="Weight" uservalue="200"/>
+        <dimension name="Lucidity" uservalue="0"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Dream Light">
       <location>
-        <dimension name="Weight" xvalue="300"/>
-        <dimension name="Lucidity" xvalue="0"/>
+        <dimension name="Weight" uservalue="300"/>
+        <dimension name="Lucidity" uservalue="0"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Dream">
       <location>
-        <dimension name="Weight" xvalue="400"/>
-        <dimension name="Lucidity" xvalue="0"/>
+        <dimension name="Weight" uservalue="400"/>
+        <dimension name="Lucidity" uservalue="0"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Dream Medium">
       <location>
-        <dimension name="Weight" xvalue="500"/>
-        <dimension name="Lucidity" xvalue="0"/>
+        <dimension name="Weight" uservalue="500"/>
+        <dimension name="Lucidity" uservalue="0"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Dream SemiBold">
       <location>
-        <dimension name="Weight" xvalue="600"/>
-        <dimension name="Lucidity" xvalue="0"/>
+        <dimension name="Weight" uservalue="600"/>
+        <dimension name="Lucidity" uservalue="0"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Dream Bold">
       <location>
-        <dimension name="Weight" xvalue="700"/>
-        <dimension name="Lucidity" xvalue="0"/>
+        <dimension name="Weight" uservalue="700"/>
+        <dimension name="Lucidity" uservalue="0"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Dream ExtraBold">
       <location>
-        <dimension name="Weight" xvalue="800"/>
-        <dimension name="Lucidity" xvalue="0"/>
+        <dimension name="Weight" uservalue="800"/>
+        <dimension name="Lucidity" uservalue="0"/>
       </location>
     </instance>
     <instance familyname="Oneira" stylename="Dream Black">
       <location>
-        <dimension name="Weight" xvalue="900"/>
-        <dimension name="Lucidity" xvalue="0"/>
+        <dimension name="Weight" uservalue="900"/>
+        <dimension name="Lucidity" uservalue="0"/>
       </location>
     </instance>
   </instances>

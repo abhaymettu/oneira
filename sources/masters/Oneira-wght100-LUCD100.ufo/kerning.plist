@@ -159,6 +159,15 @@
       <key>public.kern2.v</key>
       <integer>-39</integer>
     </dict>
+    <key>public.kern1.c</key>
+    <dict>
+      <key>public.kern2.quote</key>
+      <integer>-18</integer>
+      <key>public.kern2.stop</key>
+      <integer>-14</integer>
+      <key>public.kern2.v</key>
+      <integer>-12</integer>
+    </dict>
     <key>public.kern1.dash</key>
     <dict>
       <key>public.kern2.A</key>
@@ -175,7 +184,7 @@
     <key>public.kern1.desc</key>
     <dict>
       <key>public.kern2.j</key>
-      <integer>50</integer>
+      <integer>60</integer>
     </dict>
     <key>public.kern1.f</key>
     <dict>
@@ -186,10 +195,17 @@
       <key>public.kern2.stop</key>
       <integer>-26</integer>
     </dict>
+    <key>public.kern1.kx</key>
+    <dict>
+      <key>public.kern2.v</key>
+      <integer>30</integer>
+      <key>x</key>
+      <integer>30</integer>
+    </dict>
     <key>public.kern1.open</key>
     <dict>
       <key>public.kern2.j</key>
-      <integer>72</integer>
+      <integer>110</integer>
     </dict>
     <key>public.kern1.quote</key>
     <dict>
@@ -241,6 +257,10 @@
       <integer>-12</integer>
       <key>public.kern2.stop</key>
       <integer>-56</integer>
+      <key>public.kern2.v</key>
+      <integer>30</integer>
+      <key>x</key>
+      <integer>30</integer>
     </dict>
   </dict>
 </plist>

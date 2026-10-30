@@ -4,22 +4,22 @@
   <unicode hex="0070"/>
   <outline>
     <contour>
-      <point x="85.47999999999999" y="-220.0" type="line"/>
-      <point x="85.47999999999999" y="-220.0"/>
-      <point x="85.47999999999999" y="-220.0"/>
-      <point x="85.47999999999999" y="-220.0" type="curve"/>
-      <point x="170.23" y="-220.0" type="line"/>
-      <point x="170.23" y="-220.0"/>
-      <point x="170.23" y="-220.0"/>
-      <point x="170.23" y="-220.0" type="curve"/>
-      <point x="170.23" y="520.0" type="line"/>
-      <point x="170.23" y="520.0"/>
-      <point x="170.23" y="520.0"/>
-      <point x="170.23" y="520.0" type="curve"/>
-      <point x="85.47999999999999" y="520.0" type="line"/>
-      <point x="85.47999999999999" y="520.0"/>
-      <point x="85.47999999999999" y="520.0"/>
-      <point x="85.47999999999999" y="520.0" type="curve"/>
+      <point x="85.47999999999999" y="-218.0" type="line" smooth="yes"/>
+      <point x="85.47999999999999" y="-219.10456949966158"/>
+      <point x="86.37543050033841" y="-220.0"/>
+      <point x="87.47999999999999" y="-220.0" type="curve" smooth="yes"/>
+      <point x="168.23" y="-220.0" type="line" smooth="yes"/>
+      <point x="169.3345694996616" y="-220.0"/>
+      <point x="170.23" y="-219.10456949966158"/>
+      <point x="170.23" y="-218.0" type="curve" smooth="yes"/>
+      <point x="170.23" y="518.0" type="line" smooth="yes"/>
+      <point x="170.23" y="519.1045694996616"/>
+      <point x="169.3345694996616" y="520.0"/>
+      <point x="168.23" y="520.0" type="curve" smooth="yes"/>
+      <point x="87.47999999999999" y="520.0" type="line" smooth="yes"/>
+      <point x="86.37543050033841" y="520.0"/>
+      <point x="85.47999999999999" y="519.1045694996616"/>
+      <point x="85.47999999999999" y="518.0" type="curve" smooth="yes"/>
     </contour>
     <contour>
       <point x="39.382481809533" y="-206.3125" type="line" smooth="yes"/>

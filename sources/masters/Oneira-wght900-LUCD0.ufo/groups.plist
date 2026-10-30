@@ -49,6 +49,11 @@
       <string>Yacute</string>
       <string>Ydieresis</string>
     </array>
+    <key>public.kern1.c</key>
+    <array>
+      <string>c</string>
+      <string>ccedilla</string>
+    </array>
     <key>public.kern1.dash</key>
     <array>
       <string>hyphen</string>
@@ -60,10 +65,17 @@
     <array>
       <string>g</string>
       <string>q</string>
+      <string>j</string>
+      <string>Q</string>
     </array>
     <key>public.kern1.f</key>
     <array>
       <string>f</string>
+    </array>
+    <key>public.kern1.kx</key>
+    <array>
+      <string>k</string>
+      <string>x</string>
     </array>
     <key>public.kern1.open</key>
     <array>
@@ -92,8 +104,6 @@
       <string>thorn</string>
       <string>oslash</string>
       <string>e</string>
-      <string>c</string>
-      <string>ccedilla</string>
       <string>egrave</string>
       <string>eacute</string>
       <string>ecircumflex</string>
