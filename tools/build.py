@@ -10,7 +10,7 @@ import ufoLib2
 from fontTools.designspaceLib import AxisDescriptor, DesignSpaceDocument, SourceDescriptor
 
 sys.path.insert(0, str(Path(__file__).parent))
-from oneira import figures, latin1, lower, marks, punct, symbols, upper  # noqa: E402,F401  (registers glyphs)
+from oneira import figures, kerning, latin1, lower, marks, punct, symbols, upper  # noqa: E402,F401  (registers glyphs)
 from oneira.params import ASC, CAP, COMPOSITES, DESC, GLYPHS, UPM, XH, P, build, mark_offset  # noqa: E402
 from ufoLib2.objects import Component  # noqa: E402
 
@@ -79,6 +79,8 @@ def master(wght, lucd):
         for mark, anchor in marks:
             g.components.append(Component(baseGlyph=mark, transformation=(1, 0, 0, 1,
                                                                           round(cx), round(mark_offset(anchor, p)))))
+    f.groups.update(kerning.groups())
+    f.kerning.update(kerning.kerning(t))
     return f
 
 
