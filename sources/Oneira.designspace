@@ -1,8 +1,25 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <designspace format="5.0">
   <axes>
-    <axis tag="wght" name="Weight" minimum="100" maximum="900" default="400"/>
-    <axis tag="LUCD" name="Lucidity" minimum="0" maximum="100" default="100"/>
+    <axis tag="wght" name="Weight" minimum="100" maximum="900" default="400">
+      <labels>
+        <label uservalue="100" name="Thin"/>
+        <label uservalue="200" name="ExtraLight"/>
+        <label uservalue="300" name="Light"/>
+        <label uservalue="400" name="Regular" elidable="true"/>
+        <label uservalue="500" name="Medium"/>
+        <label uservalue="600" name="SemiBold"/>
+        <label uservalue="700" name="Bold"/>
+        <label uservalue="800" name="ExtraBold"/>
+        <label uservalue="900" name="Black"/>
+      </labels>
+    </axis>
+    <axis tag="LUCD" name="Lucidity" minimum="0" maximum="100" default="100">
+      <labels>
+        <label uservalue="0" name="Dream"/>
+        <label uservalue="100" name="Lucid" elidable="true"/>
+      </labels>
+    </axis>
   </axes>
   <sources>
     <source filename="masters/Oneira-wght100-LUCD0.ufo" familyname="Oneira" stylename="wght100 LUCD0">
@@ -23,7 +40,7 @@
         <dimension name="Lucidity" xvalue="0"/>
       </location>
     </source>
-    <source filename="masters/Oneira-wght400-LUCD100.ufo" familyname="Oneira" stylename="wght400 LUCD100">
+    <source filename="masters/Oneira-wght400-LUCD100.ufo" familyname="Oneira" stylename="Regular">
       <location>
         <dimension name="Weight" xvalue="400"/>
         <dimension name="Lucidity" xvalue="100"/>
@@ -42,4 +59,114 @@
       </location>
     </source>
   </sources>
+  <instances>
+    <instance familyname="Oneira" stylename="Thin">
+      <location>
+        <dimension name="Weight" xvalue="100"/>
+        <dimension name="Lucidity" xvalue="100"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira" stylename="ExtraLight">
+      <location>
+        <dimension name="Weight" xvalue="200"/>
+        <dimension name="Lucidity" xvalue="100"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira" stylename="Light">
+      <location>
+        <dimension name="Weight" xvalue="300"/>
+        <dimension name="Lucidity" xvalue="100"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira" stylename="Regular">
+      <location>
+        <dimension name="Weight" xvalue="400"/>
+        <dimension name="Lucidity" xvalue="100"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira" stylename="Medium">
+      <location>
+        <dimension name="Weight" xvalue="500"/>
+        <dimension name="Lucidity" xvalue="100"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira" stylename="SemiBold">
+      <location>
+        <dimension name="Weight" xvalue="600"/>
+        <dimension name="Lucidity" xvalue="100"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira" stylename="Bold">
+      <location>
+        <dimension name="Weight" xvalue="700"/>
+        <dimension name="Lucidity" xvalue="100"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira" stylename="ExtraBold">
+      <location>
+        <dimension name="Weight" xvalue="800"/>
+        <dimension name="Lucidity" xvalue="100"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira" stylename="Black">
+      <location>
+        <dimension name="Weight" xvalue="900"/>
+        <dimension name="Lucidity" xvalue="100"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira" stylename="Dream Thin">
+      <location>
+        <dimension name="Weight" xvalue="100"/>
+        <dimension name="Lucidity" xvalue="0"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira" stylename="Dream ExtraLight">
+      <location>
+        <dimension name="Weight" xvalue="200"/>
+        <dimension name="Lucidity" xvalue="0"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira" stylename="Dream Light">
+      <location>
+        <dimension name="Weight" xvalue="300"/>
+        <dimension name="Lucidity" xvalue="0"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira" stylename="Dream">
+      <location>
+        <dimension name="Weight" xvalue="400"/>
+        <dimension name="Lucidity" xvalue="0"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira" stylename="Dream Medium">
+      <location>
+        <dimension name="Weight" xvalue="500"/>
+        <dimension name="Lucidity" xvalue="0"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira" stylename="Dream SemiBold">
+      <location>
+        <dimension name="Weight" xvalue="600"/>
+        <dimension name="Lucidity" xvalue="0"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira" stylename="Dream Bold">
+      <location>
+        <dimension name="Weight" xvalue="700"/>
+        <dimension name="Lucidity" xvalue="0"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira" stylename="Dream ExtraBold">
+      <location>
+        <dimension name="Weight" xvalue="800"/>
+        <dimension name="Lucidity" xvalue="0"/>
+      </location>
+    </instance>
+    <instance familyname="Oneira" stylename="Dream Black">
+      <location>
+        <dimension name="Weight" xvalue="900"/>
+        <dimension name="Lucidity" xvalue="0"/>
+      </location>
+    </instance>
+  </instances>
 </designspace>

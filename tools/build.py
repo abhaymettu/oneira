@@ -1,5 +1,6 @@
 """Draw the masters, write the designspace, compile the variable font.
-usage: python tools/build.py [--no-compile]"""
+usage: python tools/build.py [--no-compile] [--release]
+--release also writes static instances (overlaps removed) and WOFF2 files."""
 
 import shutil
 import subprocess
@@ -7,7 +8,9 @@ import sys
 from pathlib import Path
 
 import ufoLib2
-from fontTools.designspaceLib import AxisDescriptor, DesignSpaceDocument, SourceDescriptor
+from fontTools.designspaceLib import (AxisDescriptor, AxisLabelDescriptor, DesignSpaceDocument, InstanceDescriptor,
+                                      SourceDescriptor)
+from fontTools.ttLib import TTFont
 
 sys.path.insert(0, str(Path(__file__).parent))
 from oneira import figures, kerning, latin1, lower, marks, punct, symbols, upper  # noqa: E402,F401  (registers glyphs)
@@ -20,6 +23,9 @@ FAMILY = "Oneira"
 WEIGHTS = (100, 400, 900)
 LUCIDITY = (0, 100)
 VF = ROOT / "fonts" / "variable" / f"{FAMILY}[LUCD,wght].ttf"
+NAMES = {100: "Thin", 200: "ExtraLight", 300: "Light", 400: "Regular", 500: "Medium",
+         600: "SemiBold", 700: "Bold", 800: "ExtraBold", 900: "Black"}
+FAMILIES = {100: FAMILY, 0: f"{FAMILY} Dream"}  # static families, one per end of Lucidity
 
 
 def notdef(f):
@@ -37,7 +43,8 @@ def master(wght, lucd):
     t, w = (wght - 100) / 800, lucd / 100
     f = ufoLib2.Font()
     i = f.info
-    i.familyName, i.styleName = FAMILY, f"wght{wght} LUCD{lucd}"
+    i.familyName = FAMILY
+    i.styleName = "Regular" if (wght, lucd) == (400, 100) else f"wght{wght} LUCD{lucd}"
     i.unitsPerEm, i.ascender, i.descender = UPM, ASC, DESC
     i.capHeight, i.xHeight = CAP, XH
     i.versionMajor, i.versionMinor = 0, 200
@@ -45,7 +52,7 @@ def master(wght, lucd):
     i.openTypeNameLicense = ("This Font Software is licensed under the SIL Open Font License, Version 1.1. "
                              "This license is available with a FAQ at: https://openfontlicense.org")
     i.openTypeNameLicenseURL = "https://openfontlicense.org"
-    i.openTypeOS2WinAscent, i.openTypeOS2WinDescent = 1000, 300
+    i.openTypeOS2WinAscent, i.openTypeOS2WinDescent = 1100, 300  # clears the tallest accented capital at Black
     i.openTypeHheaAscender, i.openTypeHheaDescender, i.openTypeHheaLineGap = 960, -260, 0
     i.openTypeOS2TypoAscender, i.openTypeOS2TypoDescender, i.openTypeOS2TypoLineGap = 960, -260, 0
     i.openTypeOS2WeightClass = wght
@@ -89,16 +96,36 @@ def main():
         shutil.rmtree(SRC)
     (SRC / "masters").mkdir(parents=True)
     ds = DesignSpaceDocument()
-    ds.addAxis(AxisDescriptor(tag="wght", name="Weight", minimum=100, default=400, maximum=900))
-    ds.addAxis(AxisDescriptor(tag="LUCD", name="Lucidity", minimum=0, default=100, maximum=100))
+    wght_axis = AxisDescriptor(tag="wght", name="Weight", minimum=100, default=400, maximum=900)
+    wght_axis.axisLabels = [AxisLabelDescriptor(name=n, userValue=v, elidable=v == 400) for v, n in NAMES.items()]
+    lucd_axis = AxisDescriptor(tag="LUCD", name="Lucidity", minimum=0, default=100, maximum=100)
+    lucd_axis.axisLabels = [AxisLabelDescriptor(name="Dream", userValue=0),
+                            AxisLabelDescriptor(name="Lucid", userValue=100, elidable=True)]
+    ds.addAxis(wght_axis)
+    ds.addAxis(lucd_axis)
     for wght in WEIGHTS:
         for lucd in LUCIDITY:
             name = f"{FAMILY}-wght{wght}-LUCD{lucd}.ufo"
             master(wght, lucd).save(SRC / "masters" / name)
             ds.addSource(SourceDescriptor(filename=f"masters/{name}", familyName=FAMILY,
-                                          styleName=f"wght{wght} LUCD{lucd}",
+                                          styleName="Regular" if (wght, lucd) == (400, 100) else f"wght{wght} LUCD{lucd}",
                                           location={"Weight": wght, "Lucidity": lucd}))
+    # the variable font names its instances "Bold", "Dream Bold"; the static
+    # families are "Oneira" and "Oneira Dream", so they get their own document
+    static = DesignSpaceDocument.fromstring(ds.tostring())
+    for lucd, fam in FAMILIES.items():
+        for wght, style in NAMES.items():
+            loc = {"Weight": wght, "Lucidity": lucd}
+            vf_style = style if lucd == 100 else ("Dream" if style == "Regular" else f"Dream {style}")
+            ds.addInstance(InstanceDescriptor(familyName=FAMILY, styleName=vf_style, location=loc))
+            ps = f"{fam.replace(' ', '')}-{style}"
+            static.addInstance(InstanceDescriptor(
+                familyName=fam, styleName=style, postScriptFontName=ps,
+                styleMapFamilyName=fam if style in ("Regular", "Bold") else f"{fam} {style}",
+                styleMapStyleName="bold" if style == "Bold" else "regular",
+                location=loc, filename=f"instances/{ps}.ufo"))
     ds.write(SRC / f"{FAMILY}.designspace")
+    static.write(SRC / f"{FAMILY}-static.designspace")
     print(f"{len(GLYPHS) + len(COMPOSITES)} glyphs x {len(WEIGHTS) * len(LUCIDITY)} masters")
     if "--no-compile" in sys.argv:
         return
@@ -109,7 +136,47 @@ def main():
     if r.returncode:
         print("\n".join(errs[-20:]) or r.stderr[-2000:])
         sys.exit(1)
+    finish(VF)
     print("built", VF.relative_to(ROOT))
+    if "--release" in sys.argv:
+        release()
+
+
+def finish(path):
+    """Unhinted fonts still ask rasterizers for smart dropout control, and
+    smooth rendering at every size."""
+    from fontTools.ttLib import newTable
+    from fontTools.ttLib.tables import ttProgram
+    f = TTFont(path)
+    prep = newTable("prep")
+    prep.program = ttProgram.Program()
+    prep.program.fromAssembly(["PUSHW[ ]", "511", "SCANCTRL[ ]", "PUSHB[ ]", "4", "SCANTYPE[ ]"])
+    f["prep"] = prep
+    gasp = newTable("gasp")
+    gasp.version, gasp.gaspRange = 1, {0xFFFF: 15}
+    f["gasp"] = gasp
+    f.save(path)
+
+
+def release():
+    static = ROOT / "fonts" / "static"
+    if static.exists():
+        shutil.rmtree(static)
+    r = subprocess.run([str(ROOT / ".venv/bin/fontmake"), "-m", str(SRC / f"{FAMILY}-static.designspace"),
+                        "-i", "-o", "ttf", "--output-dir", str(static)], capture_output=True, text=True)
+    if r.returncode:
+        print(r.stderr[-2000:])
+        sys.exit(1)
+    shutil.rmtree(SRC / "instances", ignore_errors=True)
+    for ttf in static.glob("*.ttf"):
+        finish(ttf)
+    web = ROOT / "fonts" / "webfonts"
+    web.mkdir(parents=True, exist_ok=True)
+    for ttf in [VF, *sorted(static.glob("*.ttf"))]:
+        f = TTFont(ttf)
+        f.flavor = "woff2"
+        f.save(web / (ttf.stem + ".woff2"))
+    print(f"static {len(list(static.glob('*.ttf')))} + woff2 in fonts/")
 
 
 if __name__ == "__main__":

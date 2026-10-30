@@ -181,14 +181,22 @@ def _close_flag(cx, y0, ry, rx):
 
 @glyph("section", 0xA7, "RR")
 def section(p):
-    """Two s shapes stacked so the lower bowl of one and the upper bowl of
-    the other close into a ring at the middle."""
-    k = 0.8
-    sp = small(p, k, 0.9)
-    a = lower.s_(sp).scaled(k)
-    h = (XH + OV) * k
-    top = CAP + OV - h
-    s = Shape().merged(a.moved(0).scaled(1, 0, top), a.scaled(1, 0, top - h * 0.5))
+    """An s whose spine opens into a ring: a top hook, a closed ring, and the
+    same hook turned upside down. Drawn a little lighter, since it stacks
+    three curves into the height of one letter."""
+    q = small(p, 1.0, 0.8)
+    top, bot = CAP + OV, -70
+    H = top - bot
+    sv = q.rv * 0.92
+    ry1 = (H + 2 * q.sh) / 6
+    ry2 = (H + 2 * q.sh - 4 * ry1) / 2
+    rx = q.W(176, 228)
+    cy1 = top - ry1
+    cy2 = cy1 - ry1 + q.sh - ry2
+    hook = Shape()
+    arc(hook, (rx, cy1, rx * 0.96, ry1), (rx, cy1, rx * 0.96 - sv, ry1 - q.sh), 30, 277, (q.tip(), None))
+    s = hook.merged(hook.rotated(rx, cy2))
+    ring(s, (rx, cy2, rx, ry2), (rx, cy2, rx - sv, ry2 - q.sh))
     return s
 
 
