@@ -22,6 +22,8 @@ LEFT = {
     "quote": ["quoteright", "quotedblright", "quoteleft", "quotedblleft", "quotesingle", "quotedbl"],
     "stop": ["period", "comma", "ellipsis", "quotesinglbase", "quotedblbase"],
     "dash": ["hyphen", "uni00AD", "endash", "emdash"],
+    "desc": ["g", "q"],  # a descender on the right, where j's hook hangs
+    "open": ["parenleft", "bracketleft", "braceleft"],
 }
 
 # second glyph, grouped by its left side
@@ -60,6 +62,7 @@ PAIRS = {
     ("F", "A"): -48, ("F", "stop"): -96, ("F", "o"): -26, ("F", "J"): -40,
     ("K", "O"): -30, ("K", "o"): -24, ("K", "dash"): -50, ("K", "v"): -30,
     ("T", "j"): -40, ("F", "j"): -34, ("P", "j"): -24, ("V", "j"): -30, ("Y", "j"): -40,
+    ("desc", "j"): 56, ("open", "j"): 80,
     ("r", "stop"): -76, ("r", "o"): -10, ("r", "dash"): -30,
     ("v", "stop"): -64, ("v", "o"): -14, ("v", "dash"): -14,
     ("f", "quote"): 40, ("f", "stop"): -30, ("f", "o"): -8,

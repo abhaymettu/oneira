@@ -56,9 +56,20 @@
       <string>endash</string>
       <string>emdash</string>
     </array>
+    <key>public.kern1.desc</key>
+    <array>
+      <string>g</string>
+      <string>q</string>
+    </array>
     <key>public.kern1.f</key>
     <array>
       <string>f</string>
+    </array>
+    <key>public.kern1.open</key>
+    <array>
+      <string>parenleft</string>
+      <string>bracketleft</string>
+      <string>braceleft</string>
     </array>
     <key>public.kern1.quote</key>
     <array>

@@ -172,6 +172,11 @@
       <key>public.kern2.Y</key>
       <integer>-82</integer>
     </dict>
+    <key>public.kern1.desc</key>
+    <dict>
+      <key>public.kern2.j</key>
+      <integer>64</integer>
+    </dict>
     <key>public.kern1.f</key>
     <dict>
       <key>public.kern2.o</key>
@@ -180,6 +185,11 @@
       <integer>46</integer>
       <key>public.kern2.stop</key>
       <integer>-34</integer>
+    </dict>
+    <key>public.kern1.open</key>
+    <dict>
+      <key>public.kern2.j</key>
+      <integer>91</integer>
     </dict>
     <key>public.kern1.quote</key>
     <dict>

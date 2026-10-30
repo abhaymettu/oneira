@@ -3,7 +3,7 @@
 import math
 
 from .geom import Shape, arc, clipped, diag, ept, hwidth, lerp, wedge
-from .params import ASC, DESC, OV, XH, glyph
+from .params import ASC, DESC, OV, XH, P, glyph, sidebearing
 from .parts import arch, bowl, cup, dot, hook, round_o, stem, zee
 
 YM = XH / 2
@@ -210,15 +210,26 @@ def l(p):
     return s
 
 
-@glyph("j", 0x6A, "OS")
-def j(p):
+def _j(p):
     s = Shape()
     rxh = p.W(118, 100) + p.stem * 1.03  # the counter stays open at Black
     x = 2 * rxh - p.stem  # stem left edge; the hook hangs to the left of it
     cyh = hook(s, p, x + p.stem, DESC - OV, rxh, p.W(132, 156), a0=208)
     stem(s, p, x, cyh - 4, XH, foot=False)
     dot(s, p, x + p.stem / 2, p.W(118, 84))
-    return s
+    return s, x
+
+
+@glyph("j", 0x6A)
+def j(p):
+    """Spaced from its stem like i, with most of the hook hanging under the
+    letter before it: it lives in the descender, where little else does.
+    Measured on the dream state, like every spaced glyph."""
+    s, x = _j(p)
+    x0, x1 = _j(P(p.t, 0))[0].xbounds()
+    sb = sidebearing("S", p)
+    dx = sb - x + (x - x0) * 0.6
+    return s.moved(dx), x1 + dx + sb
 
 
 @glyph("t", 0x74, "OO")
