@@ -87,7 +87,7 @@ def master(wght, lucd):
             g.components.append(Component(baseGlyph=mark, transformation=(1, 0, 0, 1,
                                                                           round(cx), round(mark_offset(anchor, p)))))
     f.groups.update(kerning.groups())
-    f.kerning.update(kerning.kerning(t))
+    f.kerning.update(kerning.kerning(t, w))
     return f
 
 

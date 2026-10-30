@@ -71,14 +71,23 @@ def sidebearing(kind, p):
             "O": base * 0.34, "W": base * 0.5 + allowance}[kind]
 
 
+TIP_ROOM = 0.6  # share of a tip's growth past the dream outline that spacing gives back
+
+
 def build(name, t, w):
     """Shape and advance for one master. Spaced glyphs return a Shape and are
     measured on the dream state (w=0), so wedges hang into the gap like serifs.
-    Unspaced glyphs return (Shape, advance)."""
+    Ink that grows past the dream outline on a side without wedges (the tips
+    of c, e, r, braces, quotes) gets part of its growth back as room, or it
+    runs into the next letter at lucid. Unspaced glyphs return (Shape, advance)."""
     uni, fn, sides, air = GLYPHS[name]
     p = P(t, w)
     if sides is None:
         return fn(p)
+    shape = fn(p)
     x0, x1 = fn(P(t, 0)).xbounds()
-    lsb, rsb = sidebearing(sides[0], p) * air, sidebearing(sides[1], p) * air
-    return fn(p).moved(lsb - x0), x1 - x0 + lsb + rsb
+    l0, l1 = shape.xbounds()
+    room = [0.0 if k in "SDW" else TIP_ROOM * max(0.0, grow) for k, grow in zip(sides, (x0 - l0, l1 - x1))]
+    lsb = sidebearing(sides[0], p) * air + room[0]
+    rsb = sidebearing(sides[1], p) * air + room[1]
+    return shape.moved(lsb - x0), x1 - x0 + lsb + rsb

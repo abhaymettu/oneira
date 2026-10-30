@@ -18,11 +18,13 @@ LEFT = {
     "r": ["r"],
     "v": ["v", "w", "y"],
     "f": ["f"],
-    "round": ["o", "b", "p", "thorn", "oslash", "e", "c"],
+    "round": ["o", "b", "p", "thorn", "oslash", "e"],
+    "c": ["c"],  # its lower tip reaches for the comma at lucid
+    "kx": ["k", "x"],  # wedges at the x-height, like v
     "quote": ["quoteright", "quotedblright", "quoteleft", "quotedblleft", "quotesingle", "quotedbl"],
     "stop": ["period", "comma", "ellipsis", "quotesinglbase", "quotedblbase"],
     "dash": ["hyphen", "uni00AD", "endash", "emdash"],
-    "desc": ["g", "q"],  # a descender on the right, where j's hook hangs
+    "desc": ["g", "q", "j", "Q"],  # something under the baseline on the right, where j's hook hangs
     "open": ["parenleft", "bracketleft", "braceleft"],
 }
 
@@ -63,11 +65,12 @@ PAIRS = {
     ("F", "A"): -48, ("F", "stop"): -96, ("F", "o"): -26, ("F", "J"): -40,
     ("K", "O"): -30, ("K", "o"): -24, ("K", "dash"): -50, ("K", "v"): -30,
     ("T", "j"): -40, ("F", "j"): -34, ("P", "j"): -24, ("V", "j"): -30, ("Y", "j"): -40,
-    ("desc", "j"): (50, 150), ("open", "j"): (72, 196),  # collisions: (Thin, Black)
+    ("desc", "j"): (110, 160), ("open", "j"): (110, 200),  # collisions: (Thin, Black)
     ("r", "stop"): -76, ("r", "o"): -10, ("r", "dash"): -30,
     ("v", "stop"): -64, ("v", "o"): -14, ("v", "dash"): -14,
     ("f", "quote"): 40, ("f", "stop"): -30, ("f", "o"): -8,
     ("round", "v"): -14, ("round", "stop"): -16, ("round", "quote"): -20,
+    ("c", "v"): -14, ("c", "stop"): -16, ("c", "quote"): -20,
     ("quote", "A"): -84, ("quote", "o"): -40, ("quote", "J"): -60,
     ("stop", "T"): -96, ("stop", "V"): -96, ("stop", "W"): -80, ("stop", "Y"): -110,
     ("stop", "v"): -64, ("stop", "quote"): -110,
@@ -93,9 +96,24 @@ def groups():
     return g
 
 
-def kerning(t):
-    """Pair values for weight t (0 Thin, 1 Black). Heavier weights fill
-    their counters, so the same shapes need a little more kern."""
+# added at LUCD 100, (Thin, Black): pairs whose wedges or tips meet once
+# the triangles grow in
+LUCID = {
+    ("v", "v"): (30, 12), ("kx", "v"): (30, 12), ("v", "x"): (30, 12), ("kx", "x"): (30, 12),
+    ("r", "dash"): (0, 30), ("c", "stop"): (0, 18),
+    ("desc", "j"): (-50, 0),  # the dream hook's round end reaches further
+}
+
+
+def kerning(t, w):
+    """Pair values for weight t (0 Thin, 1 Black) and Lucidity w. Heavier
+    weights fill their counters, so the same shapes need a little more kern."""
     k = lerp(0.88, 1.14, t)
-    return {(f"public.kern1.{a}", f"public.kern2.{b}"): round(lerp(*v, t) if isinstance(v, tuple) else v * k)
-            for (a, b), v in PAIRS.items()}
+    out = {}
+    for (a, b), v in PAIRS.items():
+        out[a, b] = lerp(*v, t) if isinstance(v, tuple) else v * k
+    for (a, b), v in LUCID.items():
+        out[a, b] = out.get((a, b), 0) + w * lerp(*v, t)
+    # a name that is not a class is a glyph (x sits in the n class on its left)
+    return {(f"public.kern1.{a}" if a in LEFT else a, f"public.kern2.{b}" if b in RIGHT else b): round(v)
+            for (a, b), v in out.items()}
