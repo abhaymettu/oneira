@@ -6,6 +6,8 @@
     <string>_notdef.glif</string>
     <key>A</key>
     <string>A_.glif</string>
+    <key>AE</key>
+    <string>A_E_.glif</string>
     <key>Aacute</key>
     <string>A_acute.glif</string>
     <key>Acircumflex</key>
@@ -36,6 +38,8 @@
     <string>E_dieresis.glif</string>
     <key>Egrave</key>
     <string>E_grave.glif</string>
+    <key>Eth</key>
+    <string>E_th.glif</string>
     <key>F</key>
     <string>F_.glif</string>
     <key>G</key>
@@ -74,6 +78,8 @@
     <string>O_dieresis.glif</string>
     <key>Ograve</key>
     <string>O_grave.glif</string>
+    <key>Oslash</key>
+    <string>O_slash.glif</string>
     <key>Otilde</key>
     <string>O_tilde.glif</string>
     <key>P</key>
@@ -86,6 +92,8 @@
     <string>S_.glif</string>
     <key>T</key>
     <string>T_.glif</string>
+    <key>Thorn</key>
+    <string>T_horn.glif</string>
     <key>U</key>
     <string>U_.glif</string>
     <key>Uacute</key>
@@ -122,6 +130,8 @@
     <string>acutecomb.glif</string>
     <key>adieresis</key>
     <string>adieresis.glif</string>
+    <key>ae</key>
+    <string>ae.glif</string>
     <key>agrave</key>
     <string>agrave.glif</string>
     <key>ampersand</key>
@@ -206,6 +216,8 @@
     <string>endash.glif</string>
     <key>equal</key>
     <string>equal.glif</string>
+    <key>eth</key>
+    <string>eth.glif</string>
     <key>exclam</key>
     <string>exclam.glif</string>
     <key>exclamdown</key>
@@ -218,6 +230,8 @@
     <string>four.glif</string>
     <key>g</key>
     <string>g.glif</string>
+    <key>germandbls</key>
+    <string>germandbls.glif</string>
     <key>grave</key>
     <string>grave.glif</string>
     <key>gravecomb</key>
@@ -284,6 +298,8 @@
     <string>ograve.glif</string>
     <key>one</key>
     <string>one.glif</string>
+    <key>oslash</key>
+    <string>oslash.glif</string>
     <key>otilde</key>
     <string>otilde.glif</string>
     <key>p</key>
@@ -344,6 +360,8 @@
     <string>space.glif</string>
     <key>t</key>
     <string>t.glif</string>
+    <key>thorn</key>
+    <string>thorn.glif</string>
     <key>three</key>
     <string>three.glif</string>
     <key>tilde</key>

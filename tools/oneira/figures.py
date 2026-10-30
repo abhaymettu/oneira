@@ -4,7 +4,7 @@ import math
 
 from .geom import Shape, arc, lerp, limb, ring, wedge
 from .params import CAP, OV, glyph
-from .parts import round_o, stem
+from .parts import ell_at, ring_mid, ring_thickness, round_o, stem, tangent_from
 
 FH = CAP
 YF = FH / 2
@@ -13,42 +13,6 @@ AIR = 1.15
 
 def _fig(name, uni, sides):
     return glyph(name, uni, sides, air=AIR)
-
-
-def _mid(e, sw, sh):
-    """Centre line of a ring drawn on ellipse e with side and top strokes."""
-    cx, cy, rx, ry = e
-    return (cx, cy, rx - sw / 2, ry - sh / 2)
-
-
-def _at(e, deg):
-    t = math.radians(deg)
-    return (e[0] + e[2] * math.cos(t), e[1] + e[3] * math.sin(t))
-
-
-def _tangent_from(e, pt, lo, hi):
-    """Angle on ellipse e (between lo and hi degrees) whose tangent line
-    passes through pt."""
-    def f(deg):
-        t = math.radians(deg)
-        m = _at(e, deg)
-        tx, ty = -e[2] * math.sin(t), e[3] * math.cos(t)
-        return tx * (pt[1] - m[1]) - ty * (pt[0] - m[0])
-    a, b = lo, hi
-    fa = f(a)
-    for _ in range(60):
-        c = (a + b) / 2
-        if (f(c) > 0) == (fa > 0):
-            a, fa = c, f(c)
-        else:
-            b = c
-    return (a + b) / 2
-
-
-def _thickness(p, deg, sw):
-    """Rough perpendicular stroke thickness of a ring at an angle."""
-    t = math.radians(deg)
-    return math.hypot(sw * math.cos(t), p.sh * math.sin(t))
 
 
 @_fig("zero", 0x30, "RR")
@@ -82,14 +46,14 @@ def two(p):
     ry = rx * 0.9
     cy = FH + OV - ry
     outer = (rx, cy, rx, ry)
-    mid = _mid(outer, p.rv, p.sh)
+    mid = ring_mid(outer, p.rv, p.sh)
     w = p.stem * 0.92
     # the diagonal leaves the bowl on its tangent and lands on the bar's corner
     tw = w * 1.4
     for _ in range(6):
         bot = (tw / 2, p.sh)
-        th = _tangent_from(mid, bot, -89, 10)
-        m = _at(mid, th)
+        th = tangent_from(mid, bot, -89, 10)
+        m = ell_at(mid, th)
         k = (m[0] - bot[0]) / (m[1] - bot[1])
         tw = w * math.hypot(1, k)
     xl = lambda y: (y - p.sh) * k
@@ -164,8 +128,8 @@ def five(p):
     a1 = 146
     arc(s, outer, inner, -148, a1, (p.tip(), None))
     # the stem's foot swallows the arc's cut
-    xo, _ = _at(outer, a1)
-    _, yi = _at(inner, a1)
+    xo, _ = ell_at(outer, a1)
+    _, yi = ell_at(inner, a1)
     xv = xo - 2
     w = p.stem * 0.96
     s.rect(xv, yi - 2, xv + w, FH - p.sh / 2)
@@ -182,11 +146,11 @@ def six(p):
     cy = ry - OV
     outer = (rx, cy, rx, ry)
     round_o(s, p, rx, rx, cy, ry)
-    mid = _mid(outer, p.rv, p.sh)
+    mid = ring_mid(outer, p.rv, p.sh)
     top = (rx + rx * p.W(0.52, 0.46), FH)
-    th = _tangent_from(mid, top, 95, 179)
-    m = _at(mid, th)
-    w = _thickness(p, th, p.rv)
+    th = tangent_from(mid, top, 95, 179)
+    m = ell_at(mid, th)
+    w = ring_thickness(p, th, p.rv)
     d = ((top[0] - m[0]), (top[1] - m[1]))
     ln = math.hypot(*d)
     a = (m[0] - d[0] / ln * 2, m[1] - d[1] / ln * 2)  # start a hair inside the ring: overlap, no seam

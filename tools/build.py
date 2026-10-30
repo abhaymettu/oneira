@@ -10,7 +10,7 @@ import ufoLib2
 from fontTools.designspaceLib import AxisDescriptor, DesignSpaceDocument, SourceDescriptor
 
 sys.path.insert(0, str(Path(__file__).parent))
-from oneira import figures, lower, marks, punct, upper  # noqa: E402,F401  (registers glyphs)
+from oneira import figures, latin1, lower, marks, punct, upper  # noqa: E402,F401  (registers glyphs)
 from oneira.params import ASC, CAP, COMPOSITES, DESC, GLYPHS, UPM, XH, P, build, mark_offset  # noqa: E402
 from ufoLib2.objects import Component  # noqa: E402
 

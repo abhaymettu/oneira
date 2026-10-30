@@ -140,3 +140,39 @@ def zee(s, p, W, top):
     r = p.bar_r
     s.poly([(0, top - p.sh), (W, top - p.sh), (W, top), (0, top)], [r, 0, r, r])
     s.poly([(0, 0), (W, 0), (W, p.sh), (0, p.sh)], [r, r, r, 0])
+
+
+def ring_mid(e, sw, sh):
+    """Centre line of a ring drawn on ellipse e with side and top strokes."""
+    cx, cy, rx, ry = e
+    return (cx, cy, rx - sw / 2, ry - sh / 2)
+
+
+def ell_at(e, deg):
+    t = math.radians(deg)
+    return (e[0] + e[2] * math.cos(t), e[1] + e[3] * math.sin(t))
+
+
+def tangent_from(e, pt, lo, hi):
+    """Angle on ellipse e (between lo and hi degrees) whose tangent line
+    passes through pt."""
+    def f(deg):
+        t = math.radians(deg)
+        m = ell_at(e, deg)
+        tx, ty = -e[2] * math.sin(t), e[3] * math.cos(t)
+        return tx * (pt[1] - m[1]) - ty * (pt[0] - m[0])
+    a, b = lo, hi
+    fa = f(a)
+    for _ in range(60):
+        c = (a + b) / 2
+        if (f(c) > 0) == (fa > 0):
+            a, fa = c, f(c)
+        else:
+            b = c
+    return (a + b) / 2
+
+
+def ring_thickness(p, deg, sw):
+    """Rough perpendicular stroke thickness of a ring at an angle."""
+    t = math.radians(deg)
+    return math.hypot(sw * math.cos(t), p.sh * math.sin(t))
