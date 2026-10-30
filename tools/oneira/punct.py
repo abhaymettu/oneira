@@ -8,6 +8,9 @@ from .params import ASC, CAP, DESC, OV, XH, P, glyph
 from .parts import stem
 
 MATH = 330  # centre line of math signs, dashes and guillemets
+# a short point on a small stroke; shorter ones lose weight half way between
+# dream and lucid, because the round cap and the point blend badly
+SHORT_TIP = 0.7
 
 
 def _dot_r(p):
@@ -103,6 +106,11 @@ def bullet(p):
     return s
 
 
+def _gap(p):
+    """Between a dot and the point above it (! ?)."""
+    return p.W(90, 84)
+
+
 def _bang(s, p, cx, y_lo, y_hi):
     """A stem that tapers to a point: the triangle drawn long."""
     top = p.stem * 1.12 / 2
@@ -117,7 +125,7 @@ def exclam(p):
     s = Shape()
     t = _dot_top(p)
     _dot(s, p, 0)
-    _bang(s, p, 0, t + p.W(90, 70), CAP)
+    _bang(s, p, 0, t + _gap(p), CAP)
     return s
 
 
@@ -129,15 +137,19 @@ def exclamdown(p):
 @glyph("question", 0x3F, "OO", air=1.3)
 def question(p):
     s = Shape()
-    rx, ry = p.W(196, 258), p.W(188, 214)
+    w = p.stem * p.W(0.94, 0.8)
+    # bottom up: the dot, the same gap as the exclam's, the stem's point, a
+    # short neck; the hook gets what is left, so at Black it sits higher
+    # rather than letting the point run into the dot
+    tip = Tip(p.w, p.soft, scale=SHORT_TIP)
+    y_lo = _dot_top(p) + _gap(p) + tip.reach(w / 2)
+    rx = p.W(196, 258)
+    ry = min(p.W(188, 214), (CAP + OV + p.sh * 0.5 - y_lo - p.W(60, 16)) / 2)
     cx, cy = rx, CAP + OV - ry
     arc(s, (cx, cy, rx, ry), (cx, cy, rx - p.rv, ry - p.sh), -90, 160, (None, p.tip()))
     # the stem hangs from the hook's end, its left edge flush with the cut
-    t = _dot_top(p)
-    w = p.stem * 0.94
-    y_lo = t + p.W(90, 70)
     s.rect(cx, y_lo, cx + w, cy - ry + p.sh * 0.5)
-    Tip(p.w, p.soft, scale=0.5).draw(s, (cx + w, y_lo), (cx, y_lo), (0, 1))
+    tip.draw(s, (cx + w, y_lo), (cx, y_lo), (0, 1))
     _dot(s, p, cx + w / 2)
     return s
 
@@ -516,7 +528,7 @@ def asterisk(p):
         end = (R + R * math.cos(a), cy + R * math.sin(a))
         start = (R - math.cos(a) * w * 0.2, cy - math.sin(a) * w * 0.2)
         pts = limb(s, start, end, w)
-        Tip(p.w, p.soft, scale=0.55).draw(s, pts[1], pts[2], (-math.cos(a), -math.sin(a)))
+        Tip(p.w, p.soft, scale=SHORT_TIP).draw(s, pts[1], pts[2], (-math.cos(a), -math.sin(a)))
     return s
 
 

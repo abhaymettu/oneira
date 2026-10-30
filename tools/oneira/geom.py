@@ -181,6 +181,10 @@ class Tip:
     def __init__(self, growth, soft, scale=1.0):
         self.growth, self.soft, self.scale = growth, soft, scale
 
+    def reach(self, half):
+        """How far the end reaches past its cut, for a stroke 2 * half wide."""
+        return lerp(half, half * SQRT3 * self.scale, self.growth)
+
     def draw(self, shape, po, pi, into):
         half = math.dist(po, pi) / 2
         mid = ((po[0] + pi[0]) / 2, (po[1] + pi[1]) / 2)
