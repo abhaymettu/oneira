@@ -32,7 +32,9 @@ def _comma(s, p, cx, top, flip=False):
     opening quote)."""
     r = _dot_r(p)
     side = lerp(2, 2.5, p.w) * r
-    drop = side * lerp(1.75, 1.85, p.w)
+    # the tail's length follows weight alone: tied to the dot, it was a
+    # stub at Thin (a comma read as a period) and a spike at Black lucid
+    drop = p.W(185, 380)
     pts = [(cx + side * 0.5, top), (cx - side * 0.5, top), (cx - side * 0.32, top - drop)]
     radii = [lerp(r * 0.96, p.soft, p.w)] * 2 + [lerp(r * 0.22, p.soft * 0.7, p.w)]
     if flip:
