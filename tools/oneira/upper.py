@@ -208,9 +208,9 @@ def U(p):
 @glyph("J", 0x4A, "OS")
 def J(p):
     s = Shape()
-    x = p.W(260, 330)  # stem left edge
-    rxh = p.W(250, 320) / 2 + p.stem / 2
-    cyh = hook(s, p, x + p.stem, -OV, rxh, p.W(220, 240), a0=200)
+    rxh = p.W(150, 124) + p.stem * 1.03  # the counter stays open at Black
+    x = 2 * rxh - p.stem  # stem left edge; the hook hangs to the left of it
+    cyh = hook(s, p, x + p.stem, -OV, rxh, p.W(236, 262), a0=192)
     stem(s, p, x, cyh - 4, CAP, foot=False)
     return s
 

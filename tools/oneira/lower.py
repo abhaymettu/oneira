@@ -36,15 +36,14 @@ def e(p):
     cx = rx
     outer = (cx, YM, rx, ry)
     inner = (cx, YM, rx - p.rv, ry - p.sh)
-    bar = p.sh * lerp(0.96, 0.8, p.t)
-    yb = YM - lerp(0.1, 0.5, p.t) * bar  # bar drops as weight rises to keep the eye open
+    bar = p.sh * lerp(0.96, 0.76, p.t)
+    yb = YM - lerp(0.1, 0.72, p.t) * bar  # bar drops as weight rises to keep the eye open
     a0 = math.degrees(math.asin((yb - YM) / ry))
-    arc(s, outer, inner, a0, lerp(326, 310, p.t), (None, p.tip()))  # aperture opens with weight
+    arc(s, outer, inner, a0, lerp(324, 302, p.t), (None, p.tip()))  # aperture opens with weight
     xo, _ = ept(outer, a0)
-    xi, _ = ept(inner, a0)
-    s.rect(cx - rx + p.rv * 0.5, yb, xi + 1, yb + bar)
-    # square off the slanted cut; overlap the stroke rather than share an edge (no AA seam)
-    s.rect(xi - 2, yb, xo, yb + bar * 0.6)
+    # the bar runs out to the outer edge: it squares off the slanted cut and
+    # leaves no sliver of counter between bar and bowl
+    s.rect(cx - rx + p.rv * 0.5, yb, xo - 1, yb + bar)
     return s
 
 
@@ -207,8 +206,9 @@ def l(p):
 @glyph("j", 0x6A, "OS")
 def j(p):
     s = Shape()
-    x = p.W(150, 200)  # stem left edge; the hook hangs to the left of it
-    cyh = hook(s, p, x + p.stem, DESC - OV, p.W(150, 196), p.W(132, 150), a0=212)
+    rxh = p.W(118, 100) + p.stem * 1.03  # the counter stays open at Black
+    x = 2 * rxh - p.stem  # stem left edge; the hook hangs to the left of it
+    cyh = hook(s, p, x + p.stem, DESC - OV, rxh, p.W(132, 156), a0=208)
     stem(s, p, x, cyh - 4, XH, foot=False)
     dot(s, p, x + p.stem / 2, p.W(118, 84))
     return s

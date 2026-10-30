@@ -40,14 +40,14 @@
       <point x="574.8905627484771" y="0.0"/>
       <point x="578.92" y="4.029437251522861"/>
       <point x="578.92" y="9.000000000000002" type="curve" smooth="yes"/>
-      <point x="578.92" y="511.0" type="line" smooth="yes"/>
-      <point x="578.92" y="515.9705627484772"/>
-      <point x="574.8905627484771" y="520.0"/>
-      <point x="569.92" y="520.0" type="curve" smooth="yes"/>
-      <point x="557.92" y="520.0" type="line" smooth="yes"/>
-      <point x="552.9494372515228" y="520.0"/>
-      <point x="548.92" y="515.9705627484772"/>
-      <point x="548.92" y="511.0" type="curve" smooth="yes"/>
+      <point x="578.92" y="520.0" type="line"/>
+      <point x="578.92" y="520.0"/>
+      <point x="578.92" y="520.0"/>
+      <point x="578.92" y="520.0" type="curve"/>
+      <point x="548.92" y="520.0" type="line"/>
+      <point x="548.92" y="520.0"/>
+      <point x="548.92" y="520.0"/>
+      <point x="548.92" y="520.0" type="curve"/>
     </contour>
     <contour>
       <point x="553.2501270189222" y="7.500000000000003" type="line" smooth="yes"/>

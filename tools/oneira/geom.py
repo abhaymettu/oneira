@@ -7,6 +7,8 @@ counter-clockwise (PostScript direction). Ellipses are (cx, cy, rx, ry).
 
 import math
 
+from fontTools.pens.boundsPen import BoundsPen
+
 SQRT3 = math.sqrt(3)
 
 
@@ -28,7 +30,9 @@ class Shape:
         c = []
         n = len(pts)
         for i, v in enumerate(pts):
-            a, b = _round_corner(pts[i - 1], v, pts[(i + 1) % n], radii[i])
+            # a corner may use a whole edge when the corner at its other end is sharp
+            share = (0.5 if radii[i - 1] else 1.0, 0.5 if radii[(i + 1) % n] else 1.0)
+            a, b = _round_corner(pts[i - 1], v, pts[(i + 1) % n], radii[i], share)
             c.append(("line", [a[0]]))
             c.append(("curve", [a[1], b[1], b[0]]))
         self.contours.append(c)
@@ -43,8 +47,11 @@ class Shape:
         return out
 
     def xbounds(self):
-        xs = [pts[-1][0] for c in self.contours for _, pts in c]
-        return min(xs), max(xs)
+        """Exact ink extent, curve extremes included (an arc's widest point is
+        often not an on-curve point)."""
+        bp = BoundsPen(None)
+        self.draw(bp)
+        return bp.bounds[0], bp.bounds[2]
 
     def draw(self, pen):
         for c in self.contours:
@@ -60,7 +67,7 @@ class Shape:
             pen.closePath()
 
 
-def _round_corner(prev, v, nxt, r):
+def _round_corner(prev, v, nxt, r, share=(0.5, 0.5)):
     e1 = (prev[0] - v[0], prev[1] - v[1])
     e2 = (nxt[0] - v[0], nxt[1] - v[1])
     l1, l2 = max(math.hypot(*e1), 1e-9), max(math.hypot(*e2), 1e-9)
@@ -68,7 +75,7 @@ def _round_corner(prev, v, nxt, r):
     alpha = math.acos(max(-1.0, min(1.0, u1[0] * u2[0] + u1[1] * u2[1])))
     half_t = math.tan(alpha / 2)
     d = r / half_t if half_t > 1e-9 else 0.0
-    d = min(d, l1 * 0.5, l2 * 0.5)
+    d = min(d, l1 * share[0], l2 * share[1])
     r = d * half_t
     k = 4 / 3 * math.tan((math.pi - alpha) / 4) * r
     a = (v[0] + u1[0] * d, v[1] + u1[1] * d)
@@ -141,8 +148,9 @@ def _tangent(outer, inner, a, sign):
 
 
 class Tip:
-    """The curved-stroke version of the triangle: a 60 degree point growing out
-    of the cut. growth 0 leaves a soft rounded nub, 1 a full tip."""
+    """The curved-stroke version of the triangle. growth 1 is a 60 degree tip
+    with a soft apex; growth 0 is a round cap, the dream-state terminal. Both
+    are the same six-point outline so they interpolate."""
 
     def __init__(self, growth, soft, scale=1.0):
         self.growth, self.soft, self.scale = growth, soft, scale
@@ -150,16 +158,29 @@ class Tip:
     def draw(self, shape, po, pi, into):
         half = math.dist(po, pi) / 2
         mid = ((po[0] + pi[0]) / 2, (po[1] + pi[1]) / 2)
-        h = half * lerp(0.42, SQRT3, self.growth) * self.scale
-        ap = (mid[0] - into[0] * h, mid[1] - into[1] * h)
-        nudge = 3  # tuck the base inside the stroke: no seam
-        p1 = (po[0] + into[0] * nudge, po[1] + into[1] * nudge)
-        p2 = (pi[0] + into[0] * nudge, pi[1] + into[1] * nudge)
-        pts = [p1, p2, ap]
+        out = (-into[0], -into[1])
+        cut = ((po[0] - mid[0]) / half, (po[1] - mid[1]) / half)  # unit, toward po
+        g = self.growth
+        at = lambda base, a, b: (base[0] + out[0] * a + cut[0] * b, base[1] + out[1] * a + cut[1] * b)
+        # round cap: shoulders straight out from the cut corners; tip: shoulders
+        # either side of the apex, so the two soft corners read as one round point
+        h = half * SQRT3 * self.scale
+        e = self.soft * 0.5
+        q1 = lerp_pt(at(po, half, 0), at(mid, h, e), g)
+        q2 = lerp_pt(at(pi, half, 0), at(mid, h, -e), g)
+        depth = 6  # the base tucks inside the stroke: overlap, no seam
+        p1 = at(po, -depth, -1.5)
+        p2 = at(pi, -depth, 1.5)
+        pts = [p1, po, q1, q2, pi, p2]
+        r = lerp(half, self.soft, g)
+        radii = [0, 0, r, r, 0, 0]
         if _area(pts) < 0:
-            pts = [p2, p1, ap]
-        apex_r = lerp(half * 1.4, self.soft, self.growth)
-        shape.poly(pts, [0, 0, apex_r])
+            pts, radii = pts[::-1], radii[::-1]
+        shape.poly(pts, radii)
+
+
+def lerp_pt(a, b, t):
+    return (lerp(a[0], b[0], t), lerp(a[1], b[1], t))
 
 
 def _area(pts):

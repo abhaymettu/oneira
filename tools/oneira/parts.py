@@ -9,7 +9,9 @@ from .params import OV, XH
 def stem(s, p, x, y0, y1, foot=True, head=True, top_tip=False):
     """Vertical stem from y0 to y1 with wedges on the ends that land on a
     metric line. top_tip ends the stem in a point instead (t)."""
-    s.rect(x, y0, x + p.stem, y1, r=p.end_r)
+    # only free ends soften in the dream state; an end that joins a curve stays square
+    rf, rh = (p.end_r if foot else 0), (p.end_r if head else 0)
+    s.poly([(x, y0), (x + p.stem, y0), (x + p.stem, y1), (x, y1)], [rf, rf, rh, rh])
     cx = x + p.stem / 2
     if foot:
         wedge(s, cx, y0, p.stem / 2, p.fl, p.soft, up=True)
