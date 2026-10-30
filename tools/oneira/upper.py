@@ -1,8 +1,10 @@
 """Uppercase."""
 
-from .geom import Shape, Tip, arc, clipped, diag, ept, hwidth, lerp, wedge
+import math
+
+from .geom import Shape, Tip, _area, arc, clipped, diag, ept, hwidth, lerp, wedge
 from .params import CAP, OV, glyph
-from .parts import hook, pointed, round_o, stem
+from .parts import ell_x, hook, pointed, round_o, stem, zee
 
 YC = CAP / 2
 BAR = 0.52  # bars sit a little above centre so the top counter does not look small
@@ -10,6 +12,12 @@ BAR = 0.52  # bars sit a little above centre so the top counter does not look sm
 
 def _bar(s, p, x0, x1, y_mid):
     s.rect(x0, y_mid - p.sh / 2, x1, y_mid + p.sh / 2, r=p.bar_r)
+
+
+def _arm(s, p, y0, x1):
+    """Arm of E, F, L: starts inside the stem, soft only at its free end."""
+    r = p.bar_r
+    s.poly([(p.stem / 2, y0), (x1, y0), (x1, y0 + p.sh), (p.stem / 2, y0 + p.sh)], [0, r, r, 0])
 
 
 # ---------- straight ----------
@@ -36,9 +44,9 @@ def E(p):
     s = Shape()
     W = p.W(410, 530)
     stem(s, p, 0, 0, CAP)
-    s.rect(0, CAP - p.sh, W, CAP, r=p.bar_r)
-    _bar(s, p, 0, W * 0.93, CAP * BAR)
-    s.rect(0, 0, W * 1.02, p.sh, r=p.bar_r)
+    _arm(s, p, CAP - p.sh, W)
+    _arm(s, p, CAP * BAR - p.sh / 2, W * 0.93)
+    _arm(s, p, 0, W * 1.02)
     return s
 
 
@@ -47,8 +55,8 @@ def F(p):
     s = Shape()
     W = p.W(400, 520)
     stem(s, p, 0, 0, CAP)
-    s.rect(0, CAP - p.sh, W, CAP, r=p.bar_r)
-    _bar(s, p, 0, W * 0.92, CAP * 0.5)
+    _arm(s, p, CAP - p.sh, W)
+    _arm(s, p, CAP * 0.5 - p.sh / 2, W * 0.92)
     return s
 
 
@@ -56,7 +64,7 @@ def F(p):
 def L(p):
     s = Shape()
     stem(s, p, 0, 0, CAP)
-    s.rect(0, 0, p.W(390, 510), p.sh, r=p.bar_r)
+    _arm(s, p, 0, p.W(390, 510))
     return s
 
 
@@ -88,13 +96,20 @@ def Q(p):
     s = Shape()
     rx = _O_r(p)
     round_o(s, p, rx, rx, YC, YC + OV)
-    # the tail crosses the bowl and ends below the baseline in a point
-    start = (rx + rx * 0.18, CAP * 0.24)
-    end = (rx + rx * 0.86, -p.W(70, 80))
-    tw = diag(s, *start, *end, p.dstem)
-    into = (start[0] - end[0], start[1] - end[1])
-    ln = (into[0] ** 2 + into[1] ** 2) ** 0.5
-    p.tip().draw(s, (end[0] + tw / 2, end[1]), (end[0] - tw / 2, end[1]), (into[0] / ln, into[1] / ln))
+    # the tail grows out of the bowl's lower right and ends below the baseline
+    # in a tip; its square start hides inside the bowl stroke
+    a = math.radians(-58)
+    mid_r = (rx - p.rv / 2, YC + OV - p.sh / 2)
+    start = (rx + mid_r[0] * math.cos(a), YC + mid_r[1] * math.sin(a))
+    d = (math.cos(math.radians(-40)), math.sin(math.radians(-40)))
+    ln = (start[1] + p.W(80, 96)) / -d[1]
+    end = (start[0] + d[0] * ln, start[1] + d[1] * ln)
+    tw = p.dstem * 0.96
+    n = (-d[1] * tw / 2, d[0] * tw / 2)
+    pts = [(start[0] - n[0], start[1] - n[1]), (end[0] - n[0], end[1] - n[1]),
+           (end[0] + n[0], end[1] + n[1]), (start[0] + n[0], start[1] + n[1])]
+    s.poly(pts if _area(pts) > 0 else pts[::-1])
+    p.tip().draw(s, pts[1], pts[2], (-d[0], -d[1]))
     return s
 
 
@@ -110,9 +125,13 @@ def C(p):
 def G(p):
     s = Shape()
     rx, ry = p.W(364, 414), YC + OV
-    arc(s, (rx, YC, rx, ry), (rx, YC, rx - p.rv, ry - p.sh), 46, 364, (p.tip(), None))
-    # the bar ends inside the stroke so its corner never pokes past the curve
-    s.rect(rx * 1.06, YC - p.sh * 0.9, 2 * rx - p.rv * 0.5, YC + p.sh * 0.1, r=p.bar_r)
+    outer = (rx, YC, rx, ry)
+    yt = YC + p.sh * 0.1  # bar top: the arc ends exactly here, so the two meet flush
+    a1 = 360 + math.degrees(math.asin((yt - YC) / ry))
+    arc(s, outer, (rx, YC, rx - p.rv, ry - p.sh), 46, a1, (p.tip(), None))
+    yb = yt - p.sh
+    x1 = ell_x(outer, yb, 1) - 1  # the bar's lower corner stays inside the bowl
+    s.poly([(rx * 1.06, yb), (x1, yb), (x1, yt), (rx * 1.06, yt)], [p.bar_r, 0, 0, p.bar_r])
     return s
 
 
@@ -136,12 +155,15 @@ def S(p):
 def _half_bowl(s, p, x_stem, y0, y1, right):
     """D-style bowl from the stem to `right`: straight bars into a half ellipse."""
     ry = (y1 - y0) / 2
-    rx = min(ry * 1.04, right - x_stem - p.stem * 0.6)
+    # size the bowl from its counter, so the counter stays round at Black
+    rx = min((ry - p.sh) * 1.02 + p.rv, right - x_stem - p.stem * 0.6)
     bx = right - rx
     cy = y0 + ry
     arc(s, (bx, cy, rx, ry), (bx, cy, rx - p.rv, ry - p.sh), -93, 93)
-    s.rect(x_stem, y1 - p.sh, bx + 2, y1)
-    s.rect(x_stem, y0, bx + 2, y0 + p.sh)
+    # bars start inside the stem so they never poke past its softened corner
+    xs = x_stem + p.stem / 2
+    s.rect(xs, y1 - p.sh, bx + 2, y1)
+    s.rect(xs, y0, bx + 2, y0 + p.sh)
     return bx, rx
 
 
@@ -149,13 +171,14 @@ def _half_bowl(s, p, x_stem, y0, y1, right):
 def D(p):
     s = Shape()
     stem(s, p, 0, 0, CAP)
-    ry = YC + OV
+    ry = YC  # the bowl meets flat bars, so no overshoot: it would leave a step
     W = p.W(600, 720)
     rx = ry * 0.98
     bx = W - rx
     arc(s, (bx, YC, rx, ry), (bx, YC, rx - p.rv, ry - p.sh), -92, 92)
-    s.rect(0, CAP - p.sh, bx + 2, CAP)
-    s.rect(0, 0, bx + 2, p.sh)
+    xs = p.stem / 2
+    s.rect(xs, CAP - p.sh, bx + 2, CAP)
+    s.rect(xs, 0, bx + 2, p.sh)
     return s
 
 
@@ -196,7 +219,7 @@ def U(p):
     s = Shape()
     W = p.W(540, 670)
     rx = W / 2
-    ry = rx * 0.9
+    ry = rx * 1.04  # a taller cup eases the curvature jump into the straight stems
     cy = -OV + ry
     left, right = p.stem, W - p.stem
     arc(s, (rx, cy, rx, ry), ((left + right) / 2, cy, (right - left) / 2, ry - p.sh), 174, 366)
@@ -220,13 +243,13 @@ def J(p):
 @glyph("A", 0x41, "DD")
 def A(p):
     s = Shape()
-    W = p.W(640, 790)
+    W = p.W(640, 840)
     tw0 = p.dstem * 1.25
     for _ in range(4):
         tw_l, tw_r = pointed(Shape(), p, tw0 / 2, W - tw0 / 2, 0, W / 2, CAP + OV, (False, False))
         tw0 = tw_l
     pointed(s, p, tw0 / 2, W - tw0 / 2, 0, W / 2, CAP + OV)
-    yb = CAP * 0.3
+    yb = CAP * lerp(0.3, 0.27, p.t)  # lower at Black so the top counter stays open
     f = yb / (CAP + OV)
     xl = lerp(0, W / 2, f) + tw0 * 0.5
     xr = lerp(W, W / 2, f) - tw0 * 0.5
@@ -344,10 +367,5 @@ def K(p):
 def Z(p):
     s = Shape()
     W = p.W(540, 680)
-    tw = p.dstem * 1.3
-    for _ in range(4):
-        tw = hwidth(tw / 2, 0, W - tw / 2, CAP, p.dstem)
-    s.rect(0, CAP - p.sh, W, CAP, r=p.bar_r)
-    s.rect(0, 0, W, p.sh, r=p.bar_r)
-    diag(s, tw / 2 + p.sh * 0.15, p.sh * 0.5, W - tw / 2 - p.sh * 0.15, CAP - p.sh * 0.5, p.dstem)
+    zee(s, p, W, CAP)
     return s

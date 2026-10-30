@@ -4,14 +4,22 @@
   <unicode hex="007A"/>
   <outline>
     <contour>
+      <point x="20.220000000000002" y="25.8" type="line"/>
+      <point x="20.220000000000002" y="12.9" type="line"/>
+      <point x="45.709747242147586" y="12.9" type="line"/>
+      <point x="449.22" y="494.2" type="line"/>
+      <point x="449.22" y="507.1" type="line"/>
+      <point x="423.73025275785244" y="507.1" type="line"/>
+    </contour>
+    <contour>
       <point x="19.720000000000002" y="496.2" type="line" smooth="yes"/>
       <point x="19.720000000000002" y="495.0954305003384"/>
       <point x="20.615430500338416" y="494.2"/>
       <point x="21.720000000000002" y="494.2" type="curve" smooth="yes"/>
-      <point x="447.72" y="494.2" type="line" smooth="yes"/>
-      <point x="448.8245694996616" y="494.2"/>
-      <point x="449.72" y="495.0954305003384"/>
-      <point x="449.72" y="496.2" type="curve" smooth="yes"/>
+      <point x="449.72" y="494.2" type="line"/>
+      <point x="449.72" y="494.2"/>
+      <point x="449.72" y="494.2"/>
+      <point x="449.72" y="494.2" type="curve"/>
       <point x="449.72" y="518.0" type="line" smooth="yes"/>
       <point x="449.72" y="519.1045694996616"/>
       <point x="448.8245694996616" y="520.0"/>
@@ -34,16 +42,10 @@
       <point x="449.72" y="24.904569499661587"/>
       <point x="448.8245694996616" y="25.8"/>
       <point x="447.72" y="25.8" type="curve" smooth="yes"/>
-      <point x="21.720000000000002" y="25.8" type="line" smooth="yes"/>
-      <point x="20.615430500338416" y="25.8"/>
-      <point x="19.720000000000002" y="24.904569499661587"/>
-      <point x="19.720000000000002" y="23.8" type="curve" smooth="yes"/>
-    </contour>
-    <contour>
-      <point x="23.38380578882006" y="12.9" type="line"/>
-      <point x="59.1964275280649" y="12.9" type="line"/>
-      <point x="446.05619421117996" y="507.1" type="line"/>
-      <point x="410.2435724719351" y="507.1" type="line"/>
+      <point x="19.720000000000002" y="25.8" type="line"/>
+      <point x="19.720000000000002" y="25.8"/>
+      <point x="19.720000000000002" y="25.8"/>
+      <point x="19.720000000000002" y="25.8" type="curve"/>
     </contour>
   </outline>
 </glyph>

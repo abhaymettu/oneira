@@ -4,7 +4,7 @@ import math
 
 from .geom import Shape, arc, clipped, diag, ept, hwidth, lerp, wedge
 from .params import ASC, DESC, OV, XH, glyph
-from .parts import arch, bowl, cup, dot, hook, round_o, stem
+from .parts import arch, bowl, cup, dot, hook, round_o, stem, zee
 
 YM = XH / 2
 
@@ -319,12 +319,7 @@ def y(p):
 def z(p):
     s = Shape()
     W = p.W(430, 560)
-    tw = p.dstem * 1.3
-    for _ in range(4):
-        tw = hwidth(tw / 2, 0, W - tw / 2, XH, p.dstem)
-    s.rect(0, XH - p.sh, W, XH, r=p.bar_r)
-    s.rect(0, 0, W, p.sh, r=p.bar_r)
-    diag(s, tw / 2 + p.sh * 0.15, p.sh * 0.5, W - tw / 2 - p.sh * 0.15, XH - p.sh * 0.5, p.dstem)
+    zee(s, p, W, XH)
     return s
 
 

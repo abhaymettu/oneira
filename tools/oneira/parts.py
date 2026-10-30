@@ -122,3 +122,21 @@ def pointed(s, p, xe_l, xe_r, ye, xv, y_tip, wedges=(True, True)):
             wedge(s, xe, ye, tw / 2, p.fl, p.soft, up=up, slope=run)
         tws.append(tw)
     return tws
+
+
+def zee(s, p, W, top):
+    """Z and z: two bars and a diagonal whose edges pass exactly through the
+    bars' inner corners, so the joins have no notch."""
+    lo, hi = p.sh, top - p.sh
+    tw = p.dstem * 1.3
+    for _ in range(6):
+        run = (W - tw) / (hi - lo)  # dx per dy along either edge
+        tw = p.dstem * math.hypot(1, run)
+    xl = lambda y: (y - lo) * run  # left edge, through (0, lo)
+    xr = lambda y: W + (y - hi) * run  # right edge, through (W, hi)
+    y0, y1 = p.sh * 0.5, top - p.sh * 0.5  # stop mid-bar, clear of the soft outer corners
+    e = 0.5
+    s.poly([(e, lo), (e, y0), (xr(y0), y0), (W - e, hi), (W - e, y1), (xl(y1), y1)])
+    r = p.bar_r
+    s.poly([(0, top - p.sh), (W, top - p.sh), (W, top), (0, top)], [r, 0, r, r])
+    s.poly([(0, 0), (W, 0), (W, p.sh), (0, p.sh)], [r, r, r, 0])
