@@ -32,14 +32,14 @@
       <point x="553.12" y="395.97250540834136"/>
     </contour>
     <contour>
-      <point x="548.92" y="9.000000000000002" type="line" smooth="yes"/>
-      <point x="548.92" y="4.029437251522861"/>
-      <point x="552.9494372515228" y="0.0"/>
-      <point x="557.92" y="0.0" type="curve" smooth="yes"/>
-      <point x="569.92" y="0.0" type="line" smooth="yes"/>
-      <point x="574.8905627484771" y="0.0"/>
-      <point x="578.92" y="4.029437251522861"/>
-      <point x="578.92" y="9.000000000000002" type="curve" smooth="yes"/>
+      <point x="548.92" y="0.0" type="line"/>
+      <point x="548.92" y="0.0"/>
+      <point x="548.92" y="0.0"/>
+      <point x="548.92" y="0.0" type="curve"/>
+      <point x="578.92" y="0.0" type="line"/>
+      <point x="578.92" y="0.0"/>
+      <point x="578.92" y="0.0"/>
+      <point x="578.92" y="0.0" type="curve"/>
       <point x="578.92" y="520.0" type="line"/>
       <point x="578.92" y="520.0"/>
       <point x="578.92" y="520.0"/>
@@ -48,20 +48,6 @@
       <point x="548.92" y="520.0"/>
       <point x="548.92" y="520.0"/>
       <point x="548.92" y="520.0" type="curve"/>
-    </contour>
-    <contour>
-      <point x="553.2501270189222" y="7.500000000000003" type="line" smooth="yes"/>
-      <point x="551.3256261216235" y="4.166666666666669"/>
-      <point x="553.7312522432469" y="0.0"/>
-      <point x="557.5802540378444" y="0.0" type="curve" smooth="yes"/>
-      <point x="570.2597459621555" y="0.0" type="line" smooth="yes"/>
-      <point x="574.108747756753" y="0.0"/>
-      <point x="576.5143738783765" y="4.166666666666669"/>
-      <point x="574.5898729810777" y="7.500000000000003" type="curve" smooth="yes"/>
-      <point x="568.2501270189222" y="18.480762113533153" type="line" smooth="yes"/>
-      <point x="566.3256261216234" y="21.81409544686649"/>
-      <point x="561.5143738783765" y="21.81409544686649"/>
-      <point x="559.5898729810777" y="18.480762113533153" type="curve" smooth="yes"/>
     </contour>
     <contour>
       <point x="1104.0084742850893" y="257.5232" type="line"/>

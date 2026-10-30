@@ -2,7 +2,7 @@
 
 import math
 
-from .geom import Shape, arc, hwidth, lerp, limb, wedge
+from .geom import SQRT3, Shape, Tip, arc, hwidth, lerp, limb, wedge
 from .lower import _bowl_right, a as a_lower, e as e_lower, o as o_lower
 from .params import ASC, CAP, DESC, OV, XH, glyph
 from .parts import bowl, ell_at, ring_mid, ring_thickness, round_o, stem, tangent_from
@@ -73,46 +73,61 @@ def eth(p):
     cy = XH / 2
     outer = (rx, cy, rx, ry)
     round_o(s, p, rx, rx, cy, ry)
-    # the ascender leaves the bowl on its tangent and rises to the left
-    top = (rx * 0.62, ASC)
+    # the ascender leaves the bowl on its tangent and rises to the left, a
+    # curved stroke's tail, so it ends in a tip rather than a wedge
+    top = (rx * 0.58, ASC)
     mid = ring_mid(outer, p.rv, p.sh)
     th = tangent_from(mid, top, 1, 89)
     m = ell_at(mid, th)
-    w = ring_thickness(p, th, p.rv)
+    w = ring_thickness(p, th, p.rv) * lerp(1.0, 0.8, p.t)  # lighter tail, room for the bar
     d = (top[0] - m[0], top[1] - m[1])
     ln = math.hypot(*d)
-    pts = limb(s, (m[0] - d[0] / ln * 2, m[1] - d[1] / ln * 2), top, w, ("perp", "h"))
-    tw = abs(pts[2][0] - pts[1][0])
-    wedge(s, top[0], ASC, tw / 2, p.fl, p.soft, up=False, slope=(m[0] - top[0]) / (ASC - m[1]))
-    # the crossing stroke
-    yc = XH + (ASC - XH) * 0.42
-    xc = m[0] + (yc - m[1]) * d[0] / d[1]
-    half = p.W(118, 136)
-    ang = math.radians(16)
-    limb(s, (xc - half * math.cos(ang), yc - half * math.sin(ang)),
-         (xc + half * math.cos(ang), yc + half * math.sin(ang)), p.sh * 1.05)
+    u = (d[0] / ln, d[1] / ln)
+    scale = lerp(0.9, 0.75, p.t)
+    reach = w / 2 * SQRT3 * scale * p.w + w / 2 * (1 - p.w)  # tip or round cap beyond the cut
+    end = (top[0] - u[0] * reach, top[1] - u[1] * reach)
+    pts = limb(s, (m[0] - u[0] * 2, m[1] - u[1] * 2), end, w)
+    Tip(p.w, p.soft, scale).draw(s, pts[1], pts[2], (-u[0], -u[1]))
+    # the crossing stroke: a short soft bar tilted up
+    yc = lerp(XH + OV, end[1], 0.52)  # centred on the tail where it clears the bowl
+    xc = m[0] + (yc - m[1]) * u[0] / u[1]
+    half = p.W(118, 140)
+    ang = math.radians(18)
+    bar = Shape()
+    limb(bar, (xc - half * math.cos(ang), yc - half * math.sin(ang)),
+         (xc + half * math.cos(ang), yc + half * math.sin(ang)), p.sh * lerp(0.98, 0.68, p.t))
+    c = bar.contours[0]
+    s.poly([pt[1][0] for pt in c], [p.bar_r] * 4)
     return s
 
 
 @glyph("germandbls", 0xDF, "SR")
 def germandbls(p):
+    """The stem rounds over into a small upper bowl that closes onto the stem
+    at the waist; a larger lower bowl leaves the waist and ends in a tip that
+    stays clear of the foot wedge."""
     s = Shape()
     top = ASC + OV
-    rx1, ry1 = p.W(176, 214), p.W(162, 176)
-    cy1 = top - ry1
+    waist = XH - p.sh  # the lower bowl's top stroke sits on the x-height
+    ry1 = (top - waist) / 2
+    cy1 = waist + ry1
+    rx1 = p.W(168, 246)  # wide enough at Black that the upper counter stays open
     left, right = p.stem, 2 * rx1 - p.rv
     inner1 = ((left + right) / 2, cy1, (right - left) / 2, ry1 - p.sh)
-    arc(s, (rx1, cy1, rx1, ry1), inner1, -90, 180, (p.tip(), None))
+    arc(s, (rx1, cy1, rx1, ry1), inner1, -90, 180)
     stem(s, p, 0, 0, cy1 + 4, head=False)
-    # the lower bowl is larger and sits further right; it starts inside the
-    # upper bowl's bottom stroke and ends in a tip near the stem
-    ry2 = (cy1 - ry1 + p.sh + OV) / 2
+    ry2 = (XH + OV) / 2
     cy2 = -OV + ry2
-    rx2 = p.W(206, 252)
-    cx2 = p.stem + rx2 * 0.66
-    mid_rx = rx2 - p.rv / 2
-    a_s = math.degrees(math.acos(max(-1, min(1, (rx1 - cx2) / mid_rx))))
-    arc(s, (cx2, cy2, rx2, ry2), (cx2, cy2, rx2 - p.rv, ry2 - p.sh), -118, a_s, (p.tip(), None))
+    rx2 = p.W(206, 296)
+    # the bottom stroke ends just past the bottom, its tip clear of the foot
+    # wedge (sized for the lucid wedge, so the shape holds across Lucidity)
+    a0 = -96
+    clear = p.stem + lerp(48, 64, p.t) + p.sh * 0.87 + p.W(34, 20)
+    cut = math.cos(math.radians(a0))
+    cx2 = max(2 * rx1 + p.W(38, 44) - rx2, clear - rx2 * cut)
+    # the waist bar closes the upper counter and carries the lower bowl's start
+    s.rect(p.stem / 2, waist, max(rx1, cx2) + 2, waist + p.sh)
+    arc(s, (cx2, cy2, rx2, ry2), (cx2, cy2, rx2 - p.rv, ry2 - p.sh), a0, 90, (p.tip(), None))
     return s
 
 
@@ -143,8 +158,11 @@ def AE(p):
 
 @glyph("ae", 0xE6, "RO")
 def ae(p):
-    a_s = a_lower(p)
+    """The a's bowl, then an e whose round left side sits on the a's stem. The
+    stem is a spine between two rounds, so it carries no foot wedge."""
+    s = Shape()
     rx, cx = _bowl_right(p)
-    stem_c = cx + rx - p.stem / 2
-    # the e's left side sits on the a's stem
-    return _merge(a_s, e_lower(p).moved(stem_c - p.rv / 2))
+    bowl(s, p, cx, rx, "right")
+    xs = cx + rx - p.stem
+    stem(s, p, xs, 0, XH, foot=False, head=False)
+    return _merge(s, e_lower(p).moved(xs + p.stem / 2 - p.rv / 2))
