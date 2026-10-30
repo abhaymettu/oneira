@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<glyph name="periodcentered" format="2">
+  <advance width="198"/>
+  <unicode hex="00B7"/>
+  <outline>
+    <contour>
+      <point x="91.0298088779047" y="282.65977232706535" type="line" smooth="yes"/>
+      <point x="94.54202301547491" y="276.57643899373204"/>
+      <point x="103.32255835940049" y="276.57643899373204"/>
+      <point x="106.8347724969707" y="282.65977232706535" type="curve" smooth="yes"/>
+      <point x="161.4985588779047" y="377.3402276729347" type="line" smooth="yes"/>
+      <point x="165.0107730154749" y="383.423561006268"/>
+      <point x="160.62050534351215" y="391.0277276729347"/>
+      <point x="153.5960770683717" y="391.0277276729347" type="curve" smooth="yes"/>
+      <point x="44.2685043065037" y="391.0277276729347" type="line" smooth="yes"/>
+      <point x="37.24407603136326" y="391.0277276729347"/>
+      <point x="32.853808359400475" y="383.423561006268"/>
+      <point x="36.3660224969707" y="377.3402276729347" type="curve" smooth="yes"/>
+    </contour>
+  </outline>
+</glyph>

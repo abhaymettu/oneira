@@ -42,6 +42,60 @@
       <string>z</string>
       <string>k</string>
       <string>space</string>
+      <string>period</string>
+      <string>comma</string>
+      <string>colon</string>
+      <string>semicolon</string>
+      <string>ellipsis</string>
+      <string>periodcentered</string>
+      <string>bullet</string>
+      <string>exclam</string>
+      <string>exclamdown</string>
+      <string>question</string>
+      <string>questiondown</string>
+      <string>quoteright</string>
+      <string>quoteleft</string>
+      <string>quotesinglbase</string>
+      <string>quotedblright</string>
+      <string>quotedblleft</string>
+      <string>quotedblbase</string>
+      <string>quotesingle</string>
+      <string>quotedbl</string>
+      <string>hyphen</string>
+      <string>endash</string>
+      <string>emdash</string>
+      <string>underscore</string>
+      <string>bar</string>
+      <string>brokenbar</string>
+      <string>slash</string>
+      <string>backslash</string>
+      <string>parenleft</string>
+      <string>parenright</string>
+      <string>bracketleft</string>
+      <string>bracketright</string>
+      <string>braceleft</string>
+      <string>braceright</string>
+      <string>plus</string>
+      <string>minus</string>
+      <string>equal</string>
+      <string>plusminus</string>
+      <string>multiply</string>
+      <string>divide</string>
+      <string>less</string>
+      <string>greater</string>
+      <string>asciicircum</string>
+      <string>guilsinglleft</string>
+      <string>guilsinglright</string>
+      <string>guillemotleft</string>
+      <string>guillemotright</string>
+      <string>asciitilde</string>
+      <string>asterisk</string>
+      <string>numbersign</string>
+      <string>percent</string>
+      <string>degree</string>
+      <string>at</string>
+      <string>dollar</string>
+      <string>ampersand</string>
       <string>H</string>
       <string>I</string>
       <string>E</string>

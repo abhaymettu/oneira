@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<glyph name="comma" format="2">
+  <advance width="139"/>
+  <unicode hex="002C"/>
+  <outline>
+    <contour>
+      <point x="90.19609269683423" y="31.739889003605498" type="line" smooth="yes"/>
+      <point x="95.92480028573118" y="43.96578934576363"/>
+      <point x="87.00233884827074" y="58.0"/>
+      <point x="73.50083042085909" y="58.0" type="curve"/>
+      <point x="73.50083042085909" y="58.0" type="line"/>
+      <point x="57.988463385017475" y="58.0"/>
+      <point x="45.880849001140206" y="44.583152691711405"/>
+      <point x="47.46803296369975" y="29.15219750016026" type="curve" smooth="yes"/>
+      <point x="52.585295079320545" y="-20.59896195726419" type="line" smooth="yes"/>
+      <point x="53.247272395881986" y="-27.03485253494481"/>
+      <point x="61.963872163675454" y="-28.511801158623612"/>
+      <point x="64.70903604849208" y="-22.653219697124715" type="curve" smooth="yes"/>
+    </contour>
+  </outline>
+</glyph>

@@ -123,9 +123,15 @@ def ellipse(shape, e, clockwise=False):
     shape.contours.append([("line", [start])] + [("curve", list(x)) for x in segs])
 
 
+def _check_inner(inner):
+    if inner[2] <= 0 or inner[3] <= 0:
+        raise ValueError(f"stroke is thicker than its curve: inner ellipse {inner}")
+
+
 def ring(shape, outer, inner):
     """Closed bowl. The inner ellipse is free, so the stroke can thin toward a
     join or thicken on the round sides."""
+    _check_inner(inner)
     ellipse(shape, outer)
     ellipse(shape, inner, clockwise=True)
 
@@ -134,6 +140,7 @@ def arc(shape, outer, inner, a0, a1, tips=(None, None)):
     """Open stroke between two ellipses from a0 to a1 (counter-clockwise),
     cut along the line joining the matching points. tips=(start, end) takes
     Tip objects or None."""
+    _check_inner(inner)
     s_out, out = _arc_segments(outer, a0, a1)
     s_in, inn = _arc_segments(inner, a1, a0)
     c = [("line", [s_out])] + [("curve", list(s)) for s in out]
@@ -279,3 +286,33 @@ def tittle(shape, cx, cy, r, w, soft):
     radius = lerp(inr * 0.999, soft, w)
     top = cy + inr
     shape.poly([(cx, cy - 2 * inr), (cx + side / 2, top), (cx - side / 2, top)], [radius] * 3)
+
+
+def _meet(p, d, q, e):
+    """Intersection of the lines p + s*d and q + r*e."""
+    det = d[0] * -e[1] - d[1] * -e[0]
+    s = ((q[0] - p[0]) * -e[1] - (q[1] - p[1]) * -e[0]) / det
+    return (p[0] + s * d[0], p[1] + s * d[1])
+
+
+def chevron(shape, apex, e1, e2, t, r_apex=0.0, r_end=0.0):
+    """Two arms of thickness t from e1 and e2 meeting in a mitred point at
+    apex (< > ^ and guillemets). Ends are cut square to each arm."""
+    us, outs = [], []
+    for e in (e1, e2):
+        ln = math.dist(apex, e)
+        us.append(((e[0] - apex[0]) / ln, (e[1] - apex[1]) / ln))
+    for i in (0, 1):
+        u, other = us[i], us[1 - i]
+        n = (-u[1], u[0])
+        if n[0] * other[0] + n[1] * other[1] > 0:
+            n = (-n[0], -n[1])
+        outs.append((n[0] * t / 2, n[1] * t / 2))
+    off = lambda pt, o, k: (pt[0] + o[0] * k, pt[1] + o[1] * k)
+    outer = _meet(off(apex, outs[0], 1), us[0], off(apex, outs[1], 1), us[1])
+    inner = _meet(off(apex, outs[0], -1), us[0], off(apex, outs[1], -1), us[1])
+    pts = [off(e1, outs[0], 1), outer, off(e2, outs[1], 1), off(e2, outs[1], -1), inner, off(e1, outs[0], -1)]
+    radii = [r_end, r_apex, r_end, r_end, 0, r_end]
+    if _area(pts) < 0:
+        pts, radii = pts[::-1], radii[::-1]
+    shape.poly(pts, radii)
