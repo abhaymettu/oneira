@@ -68,14 +68,14 @@ def thorn(p):
 @glyph("eth", 0xF0, "RR")
 def eth(p):
     s = Shape()
-    rx = p.W(276, 330)
+    rx = p.W(278, 336)
     ry = XH / 2 + OV
     cy = XH / 2
     outer = (rx, cy, rx, ry)
     round_o(s, p, rx, rx, cy, ry)
     # the ascender leaves the bowl on its tangent and rises to the left, a
     # curved stroke's tail, so it ends in a tip rather than a wedge
-    top = (rx * 0.58, ASC)
+    top = (rx * lerp(0.58, 0.46, p.t), ASC + p.W(0, 14))
     mid = ring_mid(outer, p.rv, p.sh)
     th = tangent_from(mid, top, 1, 89)
     m = ell_at(mid, th)
@@ -89,7 +89,7 @@ def eth(p):
     pts = limb(s, (m[0] - u[0] * 2, m[1] - u[1] * 2), end, w)
     Tip(p.w, p.soft, scale).draw(s, pts[1], pts[2], (-u[0], -u[1]))
     # the crossing stroke: a short soft bar tilted up
-    yc = lerp(XH + OV, end[1], 0.52)  # centred on the tail where it clears the bowl
+    yc = lerp(XH + OV, end[1], lerp(0.52, 0.44, p.t))  # centred on the tail where it clears the bowl
     xc = m[0] + (yc - m[1]) * u[0] / u[1]
     half = p.W(118, 140)
     ang = math.radians(18)

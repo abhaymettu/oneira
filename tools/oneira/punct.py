@@ -4,7 +4,7 @@ are that dot with a falling tail."""
 import math
 
 from .geom import SQRT3, Shape, Tip, arc, chevron, lerp, limb, ring, tittle, wedge
-from .params import ASC, CAP, DESC, OV, XH, glyph
+from .params import ASC, CAP, DESC, OV, XH, P, glyph
 from .parts import stem
 
 MATH = 330  # centre line of math signs, dashes and guillemets
@@ -352,13 +352,25 @@ def braceright(p):
 
 # ---------- math ----------
 
+def math_sign(name, uni):
+    """Math signs share one advance, so figures and signs line up in tables.
+    Centred on the dream state, like every other glyph's spacing."""
+    def deco(draw):
+        def fn(p):
+            A = p.W(600, 690)
+            x0, x1 = draw(P(p.t, 0)).xbounds()
+            return draw(p).moved((A - x0 - x1) / 2), A
+        glyph(name, uni)(fn)
+        return draw
+    return deco
+
 def _cross(s, p, cx, cy, half):
     _hbar(s, p, cx - half, cx + half, cy)
     v = p.stem * 0.86
     s.rect(cx - v / 2, cy - half, cx + v / 2, cy + half, r=p.bar_r)
 
 
-@glyph("plus", 0x2B, "OO", air=1.2)
+@math_sign("plus", 0x2B)
 def plus(p):
     s = Shape()
     half = p.W(240, 260)
@@ -366,14 +378,14 @@ def plus(p):
     return s
 
 
-@glyph("minus", 0x2212, "OO", air=1.2)
+@math_sign("minus", 0x2212)
 def minus(p):
     s = Shape()
     _hbar(s, p, 0, 2 * p.W(240, 260), MATH)
     return s
 
 
-@glyph("equal", 0x3D, "OO", air=1.2)
+@math_sign("equal", 0x3D)
 def equal(p):
     s = Shape()
     w = 2 * p.W(240, 260)
@@ -383,7 +395,7 @@ def equal(p):
     return s
 
 
-@glyph("plusminus", 0xB1, "OO", air=1.2)
+@math_sign("plusminus", 0xB1)
 def plusminus(p):
     s = Shape()
     half = p.W(240, 260)
@@ -392,41 +404,42 @@ def plusminus(p):
     return s
 
 
-@glyph("multiply", 0xD7, "OO", air=1.2)
+@math_sign("multiply", 0xD7)
 def multiply(p):
     s = Shape()
-    h = p.W(190, 200)
+    h = p.W(200, 210)
     w = p.stem * 0.86
     for dx in (1, -1):
         limb(s, (h - dx * h, MATH - h), (h + dx * h, MATH + h), w)
     return s
 
 
-@glyph("divide", 0xF7, "OO", air=1.2)
+@math_sign("divide", 0xF7)
 def divide(p):
     s = Shape()
     half = p.W(240, 260)
     _hbar(s, p, 0, 2 * half, MATH)
-    t = _dot_top(p)
-    gap = p.W(70, 60) + p.sh / 2
-    _dot(s, p, half, MATH + gap)
-    _dot(s, p, half, MATH - gap - t)
+    q = P(p.t * 0.6, p.w)  # lighter dots, so they stay inside the plus at Black
+    t = _dot_top(q)
+    gap = p.W(70, 50) + p.sh / 2
+    _dot(s, q, half, MATH + gap)
+    _dot(s, q, half, MATH - gap - t)
     return s
 
 
-@glyph("less", 0x3C, "OO", air=1.2)
+@math_sign("less", 0x3C)
 def less(p):
     s = Shape()
-    w, h = p.W(420, 460), p.W(220, 240)
+    w, h = p.W(400, 390), p.W(220, 230)
     chevron(s, (0, MATH), (w, MATH + h), (w, MATH - h), p.stem * 0.86,
             lerp(p.stem * 0.3, p.soft, p.w), p.bar_r)
     return s
 
 
-@glyph("greater", 0x3E, "OO", air=1.2)
+@math_sign("greater", 0x3E)
 def greater(p):
     s = Shape()
-    w, h = p.W(420, 460), p.W(220, 240)
+    w, h = p.W(400, 390), p.W(220, 230)
     chevron(s, (w, MATH), (0, MATH + h), (0, MATH - h), p.stem * 0.86,
             lerp(p.stem * 0.3, p.soft, p.w), p.bar_r)
     return s

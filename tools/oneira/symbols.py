@@ -7,7 +7,7 @@ from . import figures, lower, upper
 from .geom import Shape, arc, lerp, limb, ring, wedge
 from .params import CAP, DESC, OV, XH, P, glyph
 from .parts import cup, round_o, stem
-from .punct import MATH, _hbar, hyphen
+from .punct import MATH, _hbar, hyphen, math_sign
 
 SUP = 0.62  # superiors and ordinals, as a share of full size
 
@@ -123,7 +123,7 @@ def currency(p):
 
 # ---------- signs ----------
 
-@glyph("logicalnot", 0xAC, "OO", air=1.2)
+@math_sign("logicalnot", 0xAC)
 def logicalnot(p):
     s = Shape()
     W = p.W(440, 500)
@@ -152,16 +152,17 @@ def paragraph(p):
     """Pilcrow: a solid half-round flag and two stems down to the descender."""
     s = Shape()
     W = p.W(470, 600)
-    v = p.stem * 0.9
+    v = p.stem * lerp(0.9, 0.78, p.t)
     x2 = W - v
-    x1 = x2 - p.W(110, 150) - v
+    x1 = x2 - p.W(110, 170) - v
     y_low = CAP * 0.36
     ry = (CAP - y_low) / 2
     rx = min(ry * 1.05, x1 + v * 0.5)
     cx = x1 + v * 0.5
     s.contours.append(_close_flag(cx, y_low, ry, rx))  # the flag, closed by the first stem
+    q = P((v - 30) / 146, p.w)  # stems drawn at width v
     for x in (x1, x2):
-        stem(s, p, x, DESC, CAP - 4, head=False)
+        stem(s, q, x, DESC, CAP - p.sh * 0.5, head=False)  # top hidden in the bar and flag
     s.poly([(cx, CAP - p.sh), (W, CAP - p.sh), (W, CAP), (cx, CAP)], [0, p.bar_r, p.bar_r, 0])
     return s
 
