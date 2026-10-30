@@ -322,8 +322,8 @@ def bracketright(p):
 @glyph("braceleft", 0x7B, "OO", air=1.1)
 def braceleft(p):
     s = Shape()
-    sw = p.stem * 0.92
-    R = p.W(110, 140)  # radius of the hooks at both ends
+    sw = p.stem * p.W(0.92, 0.8)
+    R = sw + p.W(84, 70)  # radius of the hooks at both ends; the counter stays open
     xs = R * 0.55  # stem's left edge; the point at the middle reaches x = 0
     mid = (BR_LO + BR_HI) / 2
     ry = R
@@ -524,8 +524,8 @@ def numbersign(p):
 @glyph("percent", 0x25, "OO", air=1.0)
 def percent(p):
     s = Shape()
-    rx, ry = p.W(110, 140), p.W(140, 156)
-    sw = p.rv * 0.8
+    sw = p.rv * p.W(0.8, 0.7)
+    rx, ry = sw + p.W(80, 84), p.W(140, 156)
     W = p.W(640, 760)
     ring(s, (rx, CAP - ry, rx, ry), (rx, CAP - ry, rx - sw, ry - p.sh * 0.8))
     ring(s, (W - rx, ry, rx, ry), (W - rx, ry, rx - sw, ry - p.sh * 0.8))
@@ -536,8 +536,8 @@ def percent(p):
 @glyph("degree", 0xB0, "OO", air=1.2)
 def degree(p):
     s = Shape()
-    r = p.W(110, 130)
-    sw = p.stem * 0.8
+    sw = p.stem * p.W(0.8, 0.64)
+    r = sw + p.W(80, 62)
     ring(s, (r, CAP - r, r, r), (r, CAP - r, r - sw, r - sw * 0.92))
     return s
 
