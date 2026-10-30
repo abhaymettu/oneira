@@ -31,10 +31,16 @@ class Shape:
             return
         c = []
         n = len(pts)
+        # a corner may use a whole edge when the corner at its other end is sharp
+        share = [(0.5 if radii[i - 1] else 1.0, 0.5 if radii[(i + 1) % n] else 1.0) for i in range(n)]
+        used = [_round_corner(pts[i - 1], v, pts[(i + 1) % n], radii[i], share[i])[2] for i, v in enumerate(pts)]
         for i, v in enumerate(pts):
-            # a corner may use a whole edge when the corner at its other end is sharp
-            share = (0.5 if radii[i - 1] else 1.0, 0.5 if radii[(i + 1) % n] else 1.0)
-            a, b = _round_corner(pts[i - 1], v, pts[(i + 1) % n], max(radii[i], MIN_R), share)
+            prev, nxt = pts[i - 1], pts[(i + 1) % n]
+            if radii[i]:
+                a, b, _ = _round_corner(prev, v, nxt, radii[i], share[i])
+            else:  # a sharp corner takes MIN_R from what its neighbours leave
+                room = min(math.dist(prev, v) - used[i - 1], math.dist(v, nxt) - used[(i + 1) % n]) / 2
+                a, b, _ = _round_corner(prev, v, nxt, MIN_R, (1.0, 1.0), max(room, 0.0))
             c.append(("line", [a[0]]))
             c.append(("curve", [a[1], b[1], b[0]]))
         self.contours.append(c)
@@ -88,7 +94,9 @@ class Shape:
             pen.closePath()
 
 
-def _round_corner(prev, v, nxt, r, share=(0.5, 0.5)):
+def _round_corner(prev, v, nxt, r, share=(0.5, 0.5), cap=math.inf):
+    """The corner's two tangent points with their handles, and how far along
+    each edge the rounding reaches."""
     e1 = (prev[0] - v[0], prev[1] - v[1])
     e2 = (nxt[0] - v[0], nxt[1] - v[1])
     l1, l2 = max(math.hypot(*e1), 1e-9), max(math.hypot(*e2), 1e-9)
@@ -96,12 +104,12 @@ def _round_corner(prev, v, nxt, r, share=(0.5, 0.5)):
     alpha = math.acos(max(-1.0, min(1.0, u1[0] * u2[0] + u1[1] * u2[1])))
     half_t = math.tan(alpha / 2)
     d = r / half_t if half_t > 1e-9 else 0.0
-    d = min(d, l1 * share[0], l2 * share[1])
+    d = min(d, l1 * share[0], l2 * share[1], cap)
     r = d * half_t
     k = 4 / 3 * math.tan((math.pi - alpha) / 4) * r
     a = (v[0] + u1[0] * d, v[1] + u1[1] * d)
     b = (v[0] + u2[0] * d, v[1] + u2[1] * d)
-    return (a, (a[0] - u1[0] * k, a[1] - u1[1] * k)), (b, (b[0] - u2[0] * k, b[1] - u2[1] * k))
+    return (a, (a[0] - u1[0] * k, a[1] - u1[1] * k)), (b, (b[0] - u2[0] * k, b[1] - u2[1] * k)), d
 
 
 # ---------- ellipses ----------

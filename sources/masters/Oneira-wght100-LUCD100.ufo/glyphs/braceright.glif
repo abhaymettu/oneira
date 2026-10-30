@@ -40,8 +40,8 @@
       <point x="40.779933387176655" y="-133.33844718719115" type="curve" smooth="yes"/>
     </contour>
     <contour>
-      <point x="146.37993338717666" y="316.8" type="line"/>
-      <point x="118.77993338717664" y="316.8" type="line"/>
+      <point x="146.37993338717666" y="319.8" type="line"/>
+      <point x="118.77993338717664" y="319.8" type="line"/>
       <point x="118.77993338717664" y="-26.799999999999955" type="line"/>
       <point x="146.37993338717666" y="-26.799999999999955" type="line"/>
     </contour>
@@ -84,8 +84,8 @@
     <contour>
       <point x="146.37993338717666" y="660.4000000000001" type="line"/>
       <point x="118.77993338717664" y="660.4000000000001" type="line"/>
-      <point x="118.77993338717664" y="316.8" type="line"/>
-      <point x="146.37993338717666" y="316.8" type="line"/>
+      <point x="118.77993338717664" y="313.8" type="line"/>
+      <point x="146.37993338717666" y="313.8" type="line"/>
     </contour>
     <contour>
       <point x="135.32883501501902" y="346.0499088398338" type="line" smooth="yes"/>

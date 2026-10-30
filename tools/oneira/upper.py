@@ -335,7 +335,9 @@ def Y(p):
         for _ in range(4):
             xc = xe + (tw / 2 if xe == 0 else -tw / 2)
             tw = hwidth(xc, CAP, cx, yj, p.dstem)
-        clipped(s, (xc, CAP), (cx, yj), p.dstem, (cx, 0), (0, 1))
+        # each arm runs a hair past the centre line, so the two overlap
+        # instead of sharing an edge
+        clipped(s, (xc, CAP), (cx, yj), p.dstem, (cx + (3 if xe == 0 else -3), 0), (0, 1))
         wedge(s, xc, CAP, tw / 2, p.fl, p.soft, up=False, slope=(cx - xc) / (CAP - yj))
     return s
 

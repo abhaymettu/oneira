@@ -348,7 +348,7 @@ def braceleft(p):
         a0, a1 = (90, 180) if sign > 0 else (180, 270)
         tips = (p.tip(), None) if sign > 0 else (None, p.tip())
         arc(s, e, ei, a0, a1, tips)
-        lo, hi = sorted((cy + sign * 2, mid))
+        lo, hi = sorted((cy + sign * 2, mid - sign * 3))  # the halves overlap at the middle
         s.rect(xs, lo, xs + sw, hi)
     # the middle point: a triangle on its side, the brace's one wedge
     h = sw * lerp(1.0, 1.1, p.w)
