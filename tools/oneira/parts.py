@@ -2,7 +2,7 @@
 
 import math
 
-from .geom import SQRT3, Tip, arc, lerp, ring, tittle, wedge
+from .geom import SQRT3, Tip, _area, arc, hwidth, lerp, ring, tittle, wedge
 from .params import OV, XH
 
 
@@ -82,3 +82,41 @@ def ell_x(e, y, side):
     cx, cy, rx, ry = e
     v = max(-1.0, min(1.0, (y - cy) / ry))
     return cx + side * rx * math.sqrt(1 - v * v)
+
+
+def _toward_vertex(p, xe, ye, xv, y_tip):
+    """Centre-line height at x=xv, and horizontal width, for a stroke from the
+    cut (xe, ye) whose outer edge reaches (xv, y_tip)."""
+    dx = abs(xv - xe)
+    yc = y_tip
+    tw = p.dstem
+    for _ in range(6):
+        yc = ye + (y_tip - ye) / (1 + tw / (2 * dx))
+        tw = hwidth(xe, ye, xv, yc, p.dstem)
+    return yc, tw
+
+
+def pointed(s, p, xe_l, xe_r, ye, xv, y_tip, wedges=(True, True)):
+    """Two strokes from horizontal cuts at height ye (centres xe_l, xe_r) to a
+    sharp vertex at (xv, y_tip). Each stroke runs a hair past the centre line so
+    the halves overlap instead of sharing an edge. Returns the stroke widths."""
+    tws = []
+    for xe, side, wg in ((xe_l, -1, wedges[0]), (xe_r, 1, wedges[1])):
+        yc, tw = _toward_vertex(p, xe, ye, xv, y_tip)
+        dx = xv - xe
+        t_in = (abs(dx) - tw / 2) / abs(dx)
+        y_in = ye + t_in * (yc - ye)
+        over = 3 * -side  # past the centre line, toward the other stroke
+        slope = (yc - ye) / dx  # dy per dx along the centre line
+        outer = (xe + side * tw / 2, ye)
+        inner = (xe - side * tw / 2, ye)
+        pts = [outer, inner, (xv + over, y_in + over * slope), (xv, y_tip)]
+        if _area(pts) < 0:
+            pts = pts[::-1]
+        s.poly(pts)
+        if wg:
+            up = y_tip > ye
+            run = dx / abs(yc - ye)
+            wedge(s, xe, ye, tw / 2, p.fl, p.soft, up=up, slope=run)
+        tws.append(tw)
+    return tws
