@@ -44,11 +44,22 @@ Optical rules, applied everywhere:
    faster than verticals.
 6. **Triangles are equilateral.** Flare grows the base; the 60 degree angle never
    changes. Soft corner radius is 5 at Thin and 16 at Black.
+7. **No corner is razor sharp.** Every free stroke end, straight or diagonal,
+   rounds in the dream state. A pointed vertex (A, V, W, M) is a small flat
+   with soft corners, twice as soft at dream as at lucid, and still reaches
+   the overshoot. Even a hidden corner rounds by at least 2 units.
+
+The weight axis has an avar: the named weights sit where the grey of
+running text darkens by equal steps on each side of Regular
+(`tools/ramp.py --solve`).
 
 ## Spacing
 
-Sidebearings are measured from the plain sans skeleton (LUCD 0), so wedges hang
-into the gap the way serifs do. Each glyph side is one of: straight, round,
+Sidebearings are measured from the plain sans skeleton (LUCD 0, ends
+unrounded), so wedges hang into the gap the way serifs do. A tip that grows
+past that outline on a side without wedges (c, e, r, braces, quotes) gets 60
+percent of its growth back as room. Kerning follows weight and Lucidity:
+pairs whose wedges or tips meet at lucid ease off as the triangles grow in. Each glyph side is one of: straight, round,
 diagonal, or open (bars, arms, terminals), plus per-glyph overrides. Control
 strings: `nnonnoon`, `HHOHHOOH`, `nnannbnndnn`.
 

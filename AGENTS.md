@@ -10,11 +10,12 @@ Read [DESIGN.md](DESIGN.md) first. It is the spec every glyph is checked against
 | `tools/oneira/params.py` | Metrics, the stroke model `P(t, w)`, glyph and composite registries, spacing classes |
 | `tools/oneira/parts.py` | Shared construction: stems, bowls, arches, cups, hooks, dots, pointed vertices, Z |
 | `tools/oneira/lower.py`, `upper.py`, `figures.py`, `punct.py`, `marks.py`, `latin1.py`, `symbols.py` | The glyphs |
-| `tools/oneira/kerning.py` | Kerning classes and pair values (set at Regular, scaled by weight) |
+| `tools/oneira/kerning.py` | Kerning classes and pair values (set at Regular, scaled by weight), plus pairs that ease off with Lucidity |
 | `tools/build.py` | Draws six masters to `sources/`, compiles the variable font; `--release` adds statics and WOFF2 |
 | `tools/proof.py` | Proof sheets in headless Chromium |
 | `tools/inspect_glyph.py` | One glyph's outline, points and handles from a master UFO |
 | `tools/readme_images.py` | The README images, dark and light |
+| `tools/ramp.py` | The weight ramp as the grey of running text; `--solve` prints the avar map for `build.py` |
 
 `sources/` and `fonts/` are build output. Edit the Python, never the UFOs.
 
@@ -23,7 +24,8 @@ Read [DESIGN.md](DESIGN.md) first. It is the spec every glyph is checked against
 - **Every primitive emits a fixed number of points**, whatever its parameters, so the masters interpolate. Arc sweeps must stay in the same 90 degree band across masters, or fontmake fails its compatibility check.
 - **Never let two contours share an exact edge.** Antialiasing shows a hairline seam. Overlap them by a few units instead.
 - **Arcs and rings raise if the stroke is thicker than the curve.** Size small curves from their stroke, not the other way round.
-- **Spacing is measured on the dream state** (`LUCD 0`), so wedges hang into the gap the way serifs do. A glyph whose shape changes width with Lucidity will collide.
+- **Spacing is measured on the dream state** (`LUCD 0`, ends unrounded), so wedges hang into the gap the way serifs do. Tips that grow wider at lucid get part of their growth back as room (`TIP_ROOM` in params.py); anything else that changes width with Lucidity will collide.
+- **Pass free ends to the stroke primitives.** `diag(ends=)`, `clipped(r=)` and `pointed(free=)` round a free end in the dream state with `p.end_r`; a join gets 0. Wedges take `p.wedge_r` so their hidden dream base never pokes out of a rounded end.
 - **Proof only in Chromium.** Pillow and some previewers render overlapping contours wrongly.
 - **Check the exit status of `build.py`.** Piping it into `tail` hides a failed build.
 
