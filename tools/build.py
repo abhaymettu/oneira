@@ -10,8 +10,9 @@ import ufoLib2
 from fontTools.designspaceLib import AxisDescriptor, DesignSpaceDocument, SourceDescriptor
 
 sys.path.insert(0, str(Path(__file__).parent))
-from oneira import figures, lower, punct, upper  # noqa: E402,F401  (registers glyphs)
-from oneira.params import ASC, CAP, DESC, GLYPHS, UPM, XH, build  # noqa: E402
+from oneira import figures, lower, marks, punct, upper  # noqa: E402,F401  (registers glyphs)
+from oneira.params import ASC, CAP, COMPOSITES, DESC, GLYPHS, UPM, XH, P, build, mark_offset  # noqa: E402
+from ufoLib2.objects import Component  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "sources"
@@ -48,8 +49,9 @@ def master(wght, lucd):
     i.openTypeHheaAscender, i.openTypeHheaDescender, i.openTypeHheaLineGap = 960, -260, 0
     i.openTypeOS2TypoAscender, i.openTypeOS2TypoDescender, i.openTypeOS2TypoLineGap = 960, -260, 0
     i.openTypeOS2WeightClass = wght
-    f.glyphOrder = [".notdef"] + list(GLYPHS)
+    f.glyphOrder = [".notdef"] + list(GLYPHS) + list(COMPOSITES)
     notdef(f)
+    ink = {}
     for name, (uni, *_) in GLYPHS.items():
         shape, adv = build(name, t, w)
         g = f.newGlyph(name)
@@ -57,6 +59,26 @@ def master(wght, lucd):
             g.unicodes = [uni]
         g.width = round(adv)
         shape.draw(g.getPen())
+        ink[name] = shape.xbounds() if shape.contours else (0, 0)
+    p = P(t, w)
+    for name, (uni, base, marks) in COMPOSITES.items():
+        g = f.newGlyph(name)
+        g.unicodes = [uni]
+        if base is None:  # a spacing mark: the mark alone, centred in its own advance
+            x0, x1 = ink[marks[0][0]]
+            g.width = round(x1 - x0 + 2 * p.W(70, 60))
+            cx = g.width / 2
+        else:
+            # a mark wider than its base (I, dotless i) widens the glyph so it
+            # never runs into the neighbours
+            widest = max(ink[m][1] - ink[m][0] for m, _ in marks)
+            pad = max(0.0, (widest + 2 * p.W(36, 30) - f[base].width) / 2)
+            g.width = round(f[base].width + 2 * pad)
+            g.components.append(Component(baseGlyph=base, transformation=(1, 0, 0, 1, round(pad), 0)))
+            cx = sum(ink[base]) / 2 + round(pad)
+        for mark, anchor in marks:
+            g.components.append(Component(baseGlyph=mark, transformation=(1, 0, 0, 1,
+                                                                          round(cx), round(mark_offset(anchor, p)))))
     return f
 
 
@@ -75,7 +97,7 @@ def main():
                                           styleName=f"wght{wght} LUCD{lucd}",
                                           location={"Weight": wght, "Lucidity": lucd}))
     ds.write(SRC / f"{FAMILY}.designspace")
-    print(f"{len(GLYPHS)} glyphs x {len(WEIGHTS) * len(LUCIDITY)} masters")
+    print(f"{len(GLYPHS) + len(COMPOSITES)} glyphs x {len(WEIGHTS) * len(LUCIDITY)} masters")
     if "--no-compile" in sys.argv:
         return
     VF.parent.mkdir(parents=True, exist_ok=True)

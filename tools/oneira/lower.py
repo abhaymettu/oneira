@@ -196,6 +196,13 @@ def i(p):
     return s
 
 
+@glyph("dotlessi", 0x131, "SS")
+def dotlessi(p):
+    s = Shape()
+    stem(s, p, 0, 0, XH)
+    return s
+
+
 @glyph("l", 0x6C, "SS")
 def l(p):
     s = Shape()

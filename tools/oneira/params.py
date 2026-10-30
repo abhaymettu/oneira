@@ -49,6 +49,21 @@ def glyph(name, uni, sides=None, air=None):
     return deco
 
 
+COMPOSITES = {}
+
+
+def composite(name, uni, base, marks):
+    """An accented glyph built from components. base is a glyph name, or None
+    for a spacing mark; marks are (mark glyph, anchor) where anchor is "lc",
+    "cap" or "cedilla"."""
+    COMPOSITES[name] = (uni, base, marks)
+
+
+def mark_offset(anchor, p):
+    """Height a mark sits at. Marks rest on y = 0 (the cedilla hangs from it)."""
+    return {"lc": XH + p.W(80, 68), "cap": CAP + p.W(58, 48), "cedilla": p.sh * 0.4}[anchor]
+
+
 def sidebearing(kind, p):
     base = lerp(58, 42, p.t)
     allowance = 0.62 * p.fl
